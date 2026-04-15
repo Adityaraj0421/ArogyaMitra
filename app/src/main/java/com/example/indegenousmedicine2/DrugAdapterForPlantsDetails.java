@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import java.util.List;
 
 public class DrugAdapterForPlantsDetails extends RecyclerView.Adapter<DrugAdapterForPlantsDetails.DrugViewHolder> {
@@ -46,7 +46,7 @@ public class DrugAdapterForPlantsDetails extends RecyclerView.Adapter<DrugAdapte
 
         // Load the image if available
         if (drugDetail.getPhotograph() != null && !drugDetail.getPhotograph().isEmpty()) {
-            Picasso.get().load(drugDetail.getPhotograph()).into(holder.photographImageView);
+            Glide.with(context).load(drugDetail.getPhotograph()).into(holder.photographImageView);
             holder.photographImageView.setVisibility(View.VISIBLE);
         } else {
             holder.photographImageView.setVisibility(View.GONE);

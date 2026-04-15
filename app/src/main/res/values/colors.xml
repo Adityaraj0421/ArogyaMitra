@@ -2,6 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Theme aliases expected by older layouts and drawables -->
+    <color name="colorPrimary">#4285F4</color>
+    <color name="colorPrimaryDark">#1a5cc9</color>
     <color name="button_background">#FF4081</color> <!-- Vibrant pink color -->
     <color name="button_text">#FFFFFF</color> <!-- White text color -->
     <color name="background_color">#F5F5F5</color>

@@ -234,22 +234,6 @@ public class HomeDummy extends AppCompatActivity {
                 startActivity(new Intent(HomeDummy.this, LeafPredictionActivity.class));
             });
 
-            // Set a query text listener to listen for changes in the search query
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    // Handle search query submission
-                    performSearch(query);
-                    return true;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    // Handle changes in the search query text
-                    // You can perform real-time filtering or suggestions here
-                    return true;
-                }
-            });
         }
 
     private void initializeFeatureList() {

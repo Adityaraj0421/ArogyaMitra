@@ -53,7 +53,9 @@ public class DrugActivity extends AppCompatActivity {
                 drugList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Drug drug = snapshot.getValue(Drug.class);
-                    drugList.add(drug);
+                    if (drug != null) {
+                        drugList.add(drug);
+                    }
                 }
                 adapter.notifyDataSetChanged();
                 if (drugList.isEmpty()) {

@@ -13,3 +13,15 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Firebase config — contains API keys, never commit
+google-services.json
+
+# Signing keystores
+*.jks
+*.keystore
+*.p12
+
+# Build caches
+.gradle-home/
+.claude/

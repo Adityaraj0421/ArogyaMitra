@@ -122,7 +122,7 @@ public class UserInfoActivityDummy extends AppCompatActivity {
 //        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String currUser = currentUser.getDisplayName();
+        String currUser = (currentUser != null) ? currentUser.getDisplayName() : "";
         Log.d(TAG, "addUser: "+ currUser);
         databaseReference.push().setValue(userInfo)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

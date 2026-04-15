@@ -12,13 +12,9 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Preserve line numbers so crash stack traces are readable in production
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
 # TensorFlow Lite
 -keep class org.tensorflow.lite.** { *; }
@@ -29,5 +25,15 @@
 -keep class com.google.firebase.** { *; }
 -dontwarn com.google.firebase.**
 
-# Keep line numbers for crash reporting
--keepattributes SourceFile,LineNumberTable
+# Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep class com.bumptech.glide.** { *; }
+-dontwarn com.bumptech.glide.**
+
+# FirebaseUI
+-keep class com.firebaseui.** { *; }
+-dontwarn com.firebaseui.**
+
+# Google Play Services Auth
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**

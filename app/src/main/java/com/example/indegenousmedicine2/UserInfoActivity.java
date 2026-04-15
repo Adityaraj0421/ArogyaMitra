@@ -120,7 +120,9 @@ public class UserInfoActivity extends AppCompatActivity {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
             Intent intent = new Intent(UserInfoActivity.this, UsersActivity.class);
-            intent.putExtra("userName", currentUser);
+            if (currentUser != null) {
+                intent.putExtra("userName", currentUser.getDisplayName());
+            }
             startActivity(intent);
 //            Log.d(TAG, package com.example.indegenousmedicine2;);
                 return true;

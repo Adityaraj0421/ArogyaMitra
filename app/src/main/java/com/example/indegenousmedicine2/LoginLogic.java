@@ -85,8 +85,11 @@ private void signInWithGoogle() {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
                         // User is signed in, redirect to UserInfoActivity
-                        mAuth = FirebaseAuth.getInstance();
                         FirebaseUser currUser = mAuth.getCurrentUser();
+                        if (currUser == null) {
+                            Toast.makeText(LoginLogic.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         Intent userDetailsIntent = new Intent(LoginLogic.this, UserInfoActivity.class);
                         userDetailsIntent.putExtra("userId", currUser.getUid());
                         startActivity(userDetailsIntent);

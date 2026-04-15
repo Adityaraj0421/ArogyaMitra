@@ -48,6 +48,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -358,12 +359,12 @@ public class DrugDetails extends AppCompatActivity {
             return;
         }
 
-        int[] successfulUploads = {0};
+        AtomicInteger successfulUploads = new AtomicInteger(0);
         for (Bitmap bitmap : selectedImagesList) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference()
                     .child("images")
-                    .child(System.currentTimeMillis() + "_" + successfulUploads[0] + ".jpg");
+                    .child(System.currentTimeMillis() + "_" + successfulUploads.get() + ".jpg");
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 95, baos);
@@ -373,8 +374,7 @@ public class DrugDetails extends AppCompatActivity {
                     .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
                             .addOnSuccessListener(uri -> {
                                 imageUrls.add(uri.toString());
-                                successfulUploads[0]++;
-                                if (successfulUploads[0] == selectedImagesList.size()) {
+                                if (successfulUploads.incrementAndGet() == selectedImagesList.size()) {
                                     addDrugToDatabase(message, scientificName, howToApply, medicinalPlants,
                                             modeOfPreparation, isViable, yearsUsedSince, livingAreaSince,
                                             imageUrls, progressDialog);

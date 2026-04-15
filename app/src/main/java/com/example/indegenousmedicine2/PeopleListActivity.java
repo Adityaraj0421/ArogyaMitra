@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import androidx.appcompat.widget.Toolbar;;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,7 +47,8 @@ public class PeopleListActivity extends AppCompatActivity {
         recyclerViewPeople.setAdapter(peopleAdapter);
 
         // Get current user
-        currentUser = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        currentUser = (firebaseUser != null) ? firebaseUser.getDisplayName() : "";
 
         // Initialize Firebase Database reference
         databaseReference = FirebaseDatabase.getInstance().getReference();
