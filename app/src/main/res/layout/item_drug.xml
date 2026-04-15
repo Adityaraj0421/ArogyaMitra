@@ -37,7 +37,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center_vertical"
-        android:contentDescription=""
+        android:contentDescription="@string/cd_drug_details_button"
         android:padding="8dp"
         android:src="@drawable/ic_details" />
 </LinearLayout>

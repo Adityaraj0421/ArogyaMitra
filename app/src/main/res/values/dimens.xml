@@ -1,3 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Standard spacing scale -->
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">16dp</dimen>
+    <dimen name="spacing_lg">24dp</dimen>
+    <dimen name="spacing_xl">32dp</dimen>
+
+    <!-- Touch targets (Material Design minimum = 48dp) -->
+    <dimen name="touch_target_min">48dp</dimen>
+
+    <!-- Card / icon sizes -->
+    <dimen name="service_icon_container">60dp</dimen>
+    <dimen name="service_icon_size">36dp</dimen>
+    <dimen name="footer_icon_height">48dp</dimen>
+
+    <!-- Typography -->
+    <dimen name="text_title">20sp</dimen>
+    <dimen name="text_body">16sp</dimen>
+    <dimen name="text_caption">12sp</dimen>
+    <dimen name="text_label">11sp</dimen>
 </resources>

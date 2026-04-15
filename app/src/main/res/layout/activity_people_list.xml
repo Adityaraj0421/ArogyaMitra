@@ -21,4 +21,15 @@
         android:layout_below="@id/toolbar"
         android:padding="16dp" />
 
+    <TextView
+        android:id="@+id/textViewEmptyPeople"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_centerInParent="true"
+        android:text="@string/empty_people_list"
+        android:textSize="16sp"
+        android:textColor="@color/text_secondary"
+        android:visibility="gone" />
+
 </RelativeLayout>

@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:text="@string/drugs_added"
         android:textSize="24sp"
-        android:textColor="#007bff"
+        android:textColor="@color/colorPrimary"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="24dp"/>
 
@@ -28,4 +28,15 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
         android:padding="16dp" />
+
+    <TextView
+        android:id="@+id/textViewEmptyDrugs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_centerInParent="true"
+        android:text="@string/empty_drug_list"
+        android:textSize="16sp"
+        android:textColor="@color/text_secondary"
+        android:visibility="gone" />
 </RelativeLayout>

@@ -64,6 +64,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="0dp"
+                    android:contentDescription="@string/cd_settings_icon"
                     android:src="@drawable/ic_settings" />
 
                 <Button
@@ -89,6 +90,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="0dp"
+                    android:contentDescription="@string/cd_language_settings_icon"
                     android:src="@drawable/ic_languages_profile" />
 
                 <Button
@@ -114,6 +116,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="0dp"
+                    android:contentDescription="@string/cd_help_support_icon"
                     android:src="@drawable/ic_help_support" />
 
                 <Button
@@ -139,6 +142,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="0dp"
+                    android:contentDescription="@string/cd_about_us_icon"
                     android:src="@drawable/is_about_us" />
 
                 <Button

@@ -30,6 +30,7 @@
                     android:layout_alignParentStart="true"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
+                    android:contentDescription="@string/cd_app_logo"
                     android:src="@drawable/herbal_treatment" />
 
                 <LinearLayout
@@ -70,6 +71,7 @@
                     android:layout_marginEnd="57dp"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
+                    android:contentDescription="@string/cd_language_button"
                     android:src="@drawable/ic_language" />
 
                 <ImageView
@@ -80,6 +82,7 @@
                     android:layout_marginEnd="1dp"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
+                    android:contentDescription="@string/cd_profile_button"
                     android:src="@drawable/ic_profile_new" />
 
             </RelativeLayout>
@@ -109,7 +112,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/appbar"
         android:layout_above="@id/footer"
-        android:padding="16dp"
+        android:padding="@dimen/spacing_md"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -123,8 +126,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/welcome_card_bg"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:padding="@dimen/spacing_md"
+                android:layout_marginBottom="@dimen/spacing_md">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -149,7 +152,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="@dimen/spacing_md">
 
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/viewPager"
@@ -181,7 +184,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="@dimen/spacing_sm">
 
                 <!-- New User -->
                 <LinearLayout
@@ -190,18 +193,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="4dp">
+                    android:padding="@dimen/spacing_xs">
 
                     <LinearLayout
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="@dimen/service_icon_container"
+                        android:layout_height="@dimen/service_icon_container"
                         android:gravity="center"
                         android:background="@drawable/svc_bg_blue">
 
                         <ImageView
                             android:id="@+id/new_user_QS"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:layout_width="@dimen/service_icon_size"
+                            android:layout_height="@dimen/service_icon_size"
+                            android:contentDescription="@string/cd_new_user_service"
                             android:src="@drawable/ic_user_details" />
                     </LinearLayout>
 
@@ -210,7 +214,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/new_user"
                         android:gravity="center"
-                        android:textSize="11sp"
+                        android:textSize="@dimen/text_label"
                         android:paddingTop="6dp"
                         android:textColor="@android:color/black" />
                 </LinearLayout>
@@ -222,18 +226,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="4dp">
+                    android:padding="@dimen/spacing_xs">
 
                     <LinearLayout
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="@dimen/service_icon_container"
+                        android:layout_height="@dimen/service_icon_container"
                         android:gravity="center"
                         android:background="@drawable/svc_bg_purple">
 
                         <ImageView
                             android:id="@+id/new_drug_QS"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:layout_width="@dimen/service_icon_size"
+                            android:layout_height="@dimen/service_icon_size"
+                            android:contentDescription="@string/cd_new_drug_service"
                             android:src="@drawable/herbalism" />
                     </LinearLayout>
 
@@ -242,7 +247,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/new_drug"
                         android:gravity="center"
-                        android:textSize="11sp"
+                        android:textSize="@dimen/text_label"
                         android:paddingTop="6dp"
                         android:textColor="@android:color/black" />
                 </LinearLayout>
@@ -254,18 +259,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="4dp">
+                    android:padding="@dimen/spacing_xs">
 
                     <LinearLayout
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="@dimen/service_icon_container"
+                        android:layout_height="@dimen/service_icon_container"
                         android:gravity="center"
                         android:background="@drawable/svc_bg_amber">
 
                         <ImageView
                             android:id="@+id/status_icon_QS"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:layout_width="@dimen/service_icon_size"
+                            android:layout_height="@dimen/service_icon_size"
+                            android:contentDescription="@string/cd_check_status_service"
                             android:src="@drawable/ic_status" />
                     </LinearLayout>
 
@@ -274,7 +280,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/check_status"
                         android:gravity="center"
-                        android:textSize="11sp"
+                        android:textSize="@dimen/text_label"
                         android:paddingTop="6dp"
                         android:textColor="@android:color/black" />
                 </LinearLayout>
@@ -286,7 +292,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="@dimen/spacing_md">
 
                 <!-- Drug List -->
                 <LinearLayout
@@ -295,18 +301,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="4dp">
+                    android:padding="@dimen/spacing_xs">
 
                     <LinearLayout
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="@dimen/service_icon_container"
+                        android:layout_height="@dimen/service_icon_container"
                         android:gravity="center"
                         android:background="@drawable/svc_bg_green">
 
                         <ImageView
                             android:id="@+id/drug_list_QS"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:layout_width="@dimen/service_icon_size"
+                            android:layout_height="@dimen/service_icon_size"
+                            android:contentDescription="@string/cd_drug_list_service"
                             android:src="@drawable/ic_medicine_list" />
                     </LinearLayout>
 
@@ -315,7 +322,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/drug_list"
                         android:gravity="center"
-                        android:textSize="11sp"
+                        android:textSize="@dimen/text_label"
                         android:paddingTop="6dp"
                         android:textColor="@android:color/black" />
                 </LinearLayout>
@@ -327,18 +334,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="4dp">
+                    android:padding="@dimen/spacing_xs">
 
                     <LinearLayout
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="@dimen/service_icon_container"
+                        android:layout_height="@dimen/service_icon_container"
                         android:gravity="center"
                         android:background="@drawable/svc_bg_pink">
 
                         <ImageView
                             android:id="@+id/list_of_plants_QS"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:layout_width="@dimen/service_icon_size"
+                            android:layout_height="@dimen/service_icon_size"
+                            android:contentDescription="@string/cd_plants_list_service"
                             android:src="@drawable/ic_plants_list" />
                     </LinearLayout>
 
@@ -347,7 +355,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/list_of_plants"
                         android:gravity="center"
-                        android:textSize="11sp"
+                        android:textSize="@dimen/text_label"
                         android:paddingTop="6dp"
                         android:textColor="@android:color/black" />
                 </LinearLayout>
@@ -359,18 +367,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="4dp">
+                    android:padding="@dimen/spacing_xs">
 
                     <LinearLayout
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="@dimen/service_icon_container"
+                        android:layout_height="@dimen/service_icon_container"
                         android:gravity="center"
                         android:background="@drawable/svc_bg_teal">
 
                         <ImageView
                             android:id="@+id/identify_leaf_QS"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:layout_width="@dimen/service_icon_size"
+                            android:layout_height="@dimen/service_icon_size"
+                            android:contentDescription="@string/cd_identify_leaf_service"
                             android:src="@drawable/herbal_treatment" />
                     </LinearLayout>
 
@@ -379,7 +388,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/identify_leaf"
                         android:gravity="center"
-                        android:textSize="11sp"
+                        android:textSize="@dimen/text_label"
                         android:paddingTop="6dp"
                         android:textColor="@android:color/black" />
                 </LinearLayout>
@@ -405,18 +414,20 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:minHeight="@dimen/touch_target_min"
+            android:padding="@dimen/spacing_xs">
 
             <ImageView
                 android:id="@+id/users_list_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/footer_icon_height"
+                android:contentDescription="@string/cd_users_list_nav"
                 android:src="@drawable/ic_users_list"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
                 android:gravity="center"
                 android:text="@string/users"/>
 
@@ -427,19 +438,21 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:minHeight="@dimen/touch_target_min"
+            android:padding="@dimen/spacing_xs">
 
             <ImageView
                 android:id="@+id/add_drug_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/footer_icon_height"
+                android:contentDescription="@string/cd_add_drug_nav"
                 android:src="@drawable/ic_add_drug"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingTop="10dp"
                 android:text="@string/add_drug"/>
 
         </LinearLayout>
@@ -449,19 +462,21 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:minHeight="@dimen/touch_target_min"
+            android:padding="@dimen/spacing_xs">
 
             <ImageView
                 android:id="@+id/status_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/footer_icon_height"
+                android:contentDescription="@string/cd_status_nav"
                 android:src="@drawable/ic_status"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingTop="10dp"
                 android:text="@string/status"/>
 
         </LinearLayout>
@@ -471,18 +486,20 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:minHeight="@dimen/touch_target_min"
+            android:padding="@dimen/spacing_xs">
 
             <ImageView
                 android:id="@+id/newsletter_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/footer_icon_height"
+                android:contentDescription="@string/cd_newsletter_nav"
                 android:src="@drawable/ic_documents"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
                 android:gravity="center"
                 android:text="@string/newsletter"/>
 
@@ -493,18 +510,20 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:minHeight="@dimen/touch_target_min"
+            android:padding="@dimen/spacing_xs">
 
             <ImageView
                 android:id="@+id/transations_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/footer_icon_height"
+                android:contentDescription="@string/cd_transactions_nav"
                 android:src="@drawable/ic_transaction"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
                 android:text="@string/transactions"
                 android:gravity="center"/>
 

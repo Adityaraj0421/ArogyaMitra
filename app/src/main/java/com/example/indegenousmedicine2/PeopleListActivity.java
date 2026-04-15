@@ -26,6 +26,7 @@ import java.util.List;
 public class PeopleListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewPeople;
+    private android.widget.TextView textViewEmpty;
     private PeopleAdapter peopleAdapter;
     private List<String> peopleList = new ArrayList<>();
     private DatabaseReference databaseReference;
@@ -42,6 +43,7 @@ public class PeopleListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerViewPeople = findViewById(R.id.recyclerViewPeople);
+        textViewEmpty = findViewById(R.id.textViewEmptyPeople);
         recyclerViewPeople.setLayoutManager(new LinearLayoutManager(this));
         peopleAdapter = new PeopleAdapter(peopleList);
         recyclerViewPeople.setAdapter(peopleAdapter);
@@ -76,6 +78,9 @@ public class PeopleListActivity extends AppCompatActivity {
                     }
                 }
                 peopleAdapter.notifyDataSetChanged();
+                boolean empty = peopleList.isEmpty();
+                recyclerViewPeople.setVisibility(empty ? android.view.View.GONE : android.view.View.VISIBLE);
+                textViewEmpty.setVisibility(empty ? android.view.View.VISIBLE : android.view.View.GONE);
             }
 
             @Override

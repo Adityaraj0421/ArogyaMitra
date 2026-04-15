@@ -34,6 +34,7 @@ public class DrugListActivity extends AppCompatActivity {
     public static final String EXTRA_PLANT_QUERY = "PLANT_QUERY";
 
     private RecyclerView recyclerViewDrugs;
+    private android.widget.TextView textViewEmpty;
     private ArrayList<Medicine> medicines;
     private MedicineAdapter adapter;
     private DatabaseReference databaseReference;
@@ -72,6 +73,7 @@ public class DrugListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         recyclerViewDrugs = findViewById(R.id.recyclerViewDrugs);
+        textViewEmpty = findViewById(R.id.textViewEmptyDrugs);
         recyclerViewDrugs.setLayoutManager(new LinearLayoutManager(this));
 
         medicines = new ArrayList<>();
@@ -128,6 +130,9 @@ public class DrugListActivity extends AppCompatActivity {
                     medicines.add(new Medicine(key, drugName, scientificName));
                 }
                 adapter.notifyDataSetChanged();
+                boolean empty = medicines.isEmpty();
+                recyclerViewDrugs.setVisibility(empty ? android.view.View.GONE : android.view.View.VISIBLE);
+                textViewEmpty.setVisibility(empty ? android.view.View.VISIBLE : android.view.View.GONE);
             }
 
             @Override

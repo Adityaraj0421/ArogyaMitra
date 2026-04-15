@@ -110,4 +110,30 @@
     <string name="model_load_error">Leaf classifier assets could not be loaded.</string>
     <string name="prediction_loading">Running on-device prediction…</string>
     <string name="search_drug_records">Find in Drug Database</string>
+
+    <!-- Accessibility content descriptions -->
+    <string name="cd_app_logo">Agroषधि app logo</string>
+    <string name="cd_language_button">Change language</string>
+    <string name="cd_profile_button">View profile</string>
+    <string name="cd_new_user_service">Add new user</string>
+    <string name="cd_new_drug_service">Add new drug record</string>
+    <string name="cd_check_status_service">Check status</string>
+    <string name="cd_drug_list_service">Open drug list</string>
+    <string name="cd_plants_list_service">Browse list of plants</string>
+    <string name="cd_identify_leaf_service">Identify a leaf</string>
+    <string name="cd_users_list_nav">Users list</string>
+    <string name="cd_add_drug_nav">Add drug</string>
+    <string name="cd_status_nav">Status</string>
+    <string name="cd_newsletter_nav">Newsletter</string>
+    <string name="cd_transactions_nav">Transactions</string>
+    <string name="cd_app_main_logo">Indigenous Medicine app logo</string>
+    <string name="cd_settings_icon">Settings</string>
+    <string name="cd_language_settings_icon">Language settings</string>
+    <string name="cd_help_support_icon">Help and support</string>
+    <string name="cd_about_us_icon">About us</string>
+    <string name="cd_drug_details_button">View drug details</string>
+
+    <!-- Empty state messages -->
+    <string name="empty_drug_list">No drug records added yet</string>
+    <string name="empty_people_list">No users found</string>
 </resources>
