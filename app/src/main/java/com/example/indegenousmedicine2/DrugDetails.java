@@ -1,37 +1,38 @@
 package com.example.indegenousmedicine2;
 
 import static android.content.ContentValues.TAG;
-import android.Manifest;
-import android.app.ProgressDialog;
-import android.content.pm.PackageManager;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,223 +44,120 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class DrugDetails extends AppCompatActivity {
-    //421-22, 367
 
     private String currentUser;
-    private EditText mDrugNameEditText;
     private EditText mMessageEditText;
     private EditText mScientificNameEditText;
-    private EditText mhowToApplyEditText;
+    private EditText mHowToApplyEditText;
     private EditText mMedicinalPlantsEditText;
     private EditText mModeOfPreparationEditText;
-    private RadioGroup viableRadioGroup;
-    private RadioButton selectedRadioButton;
     private EditText mYearsUsedEditText;
     private EditText mLivingAreaSinceEditText;
+    private RadioButton yesRadioButton;
+    private RadioButton noRadioButton;
+    private android.widget.RadioGroup viableRadioGroup;
     private Button mSendButton;
-    private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessageDatabaseReference;
-    private Button mProfileButton;
     private String user;
-    private String userEmail;
-    private FirebaseAuth mAuth;
-    private static final int RC_SIGN_IN = 123;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int REQUEST_IMAGE_PICK = 2;
-    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
-    private static final int MAX_IMAGES = 5;
-    private ImageView selectedImageView;
-    private Bitmap selectedImageBitmap;
-    private int imageCount = 0;
-    private ArrayList<Bitmap> selectedImagesList = new ArrayList<>();
-    private ArrayList<Uri> selectedImagesUrls = new ArrayList<>();
+    private RecyclerView imageRecyclerView;
     private ImageAdapter imageAdapter;
-    ArrayList<String> urls = new ArrayList<>();
+    private final ArrayList<Bitmap> selectedImagesList = new ArrayList<>();
+
+    private final ActivityResultLauncher<String> pickImageLauncher =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+                if (uri == null) {
+                    return;
+                }
+                try {
+                    Bitmap bitmap = loadBitmapFromUri(uri);
+                    if (bitmap != null) {
+                        addImageToList(bitmap);
+                    } else {
+                        Toast.makeText(this, R.string.prediction_error, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    Toast.makeText(this, R.string.prediction_error, Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Failed to decode selected image", e);
+                }
+            });
+
+    private final ActivityResultLauncher<Void> captureImageLauncher =
+            registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
+                if (bitmap != null) {
+                    addImageToList(bitmap);
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LanguageManager.applyLanguage(this);
         setContentView(R.layout.activity_user_details);
 
-//        currentUser = getIntent().getStringExtra("NameOfClient");
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            currentUser = extras.getString("NameOfClient", "Anonymous");
-        } else {
-            currentUser = "Anonymous";
+        currentUser = extras != null ? extras.getString("NameOfClient", "Anonymous") : "Anonymous";
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser == null) {
+            startActivity(new Intent(this, LoginLogic.class));
+            finish();
+            return;
         }
-        // Check for camera permission
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission not granted, request it
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA},
-                    CAMERA_PERMISSION_REQUEST_CODE);
-        } else {
-            // Permission already granted, continue with activity setup
-            setupViews();
-        }
-
-//        RecyclerView imageRecyclerView = findViewById(R.id.imageRecyclerView);
-        // Initialize the list to hold selected images
-        selectedImagesList = new ArrayList<>();
-
-        // Initialize the adapter with the selectedImagesList
-//        imageAdapter = new ImageAdapter(selectedImagesList);
-
-        // Set the LayoutManager for the RecyclerView
-        RecyclerView imageRecyclerView = findViewById(R.id.imageRecyclerView);
-        imageRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        // Set the adapter for the RecyclerView
-        imageRecyclerView.setAdapter(imageAdapter);
-
-
-        Button imageButton = findViewById(R.id.imageButton);
-//        imageButton.setOnClickListener(v -> {
-//            // Open the gallery or camera based on user choice
-//            selectImage();
-//        });
-        imageButton.setOnClickListener(v -> selectImage());
-
-
-        // Apply language when activity is created
-        LanguageManager.applyLanguage(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Agroषधि");
-
-
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currUser = mAuth.getCurrentUser();
-        if (currUser == null) {
-            // User is not signed in, start the sign-in flow
-            startActivity(new Intent(DrugDetails.this, LoginLogic.class));
-            finish(); // Close this activity so user can't go back
-        } else {
-            // User is signed in
-            setupViews();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Agroषधि");
         }
-        imageButton = findViewById(R.id.imageButton);
-        imageButton.setOnClickListener(v -> selectImage());
+
+        imageRecyclerView = findViewById(R.id.imageRecyclerView);
+        imageRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        imageAdapter = new ImageAdapter(selectedImagesList);
+        imageRecyclerView.setAdapter(imageAdapter);
+
+        setupViews(firebaseUser);
+
+        Button imageButton = findViewById(R.id.imageButton);
+        imageButton.setOnClickListener(v -> showImageSelectionOptions());
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Camera permission granted, proceed with activity setup
-                setupViews();
-            } else {
-                // Camera permission denied, show a message or handle it accordingly
-                Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-
-    private void selectImage() {
-        // Check if camera permission is granted
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted, show dialog to request permission
-            AlertDialog.Builder builder = new AlertDialog.Builder(DrugDetails.this);
-            builder.setMessage("Please grant access to camera to select image")
-                    .setPositiveButton("Grant", (dialog, which) -> {
-                        // Request camera permission
-                        ActivityCompat.requestPermissions(DrugDetails.this,
-                                new String[]{Manifest.permission.CAMERA},
-                                CAMERA_PERMISSION_REQUEST_CODE);
-                    })
-                    .setNegativeButton("Cancel", (dialog, which) -> {
-                        // Do nothing if permission is not granted
-                        dialog.dismiss();
-                    })
-                    .show();
-        } else {
-            // Permission is granted, proceed with image selection
-            showImageSelectionOptions();
-        }
-    }
-
-    private void showImageSelectionOptions() {
-        // Show options for selecting image from camera or gallery
-        CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(DrugDetails.this);
-        builder.setTitle("Select Option");
-        builder.setItems(options, (dialog, item) -> {
-            if (options[item].equals("Take Photo")) {
-                // Open camera intent
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
-            } else if (options[item].equals("Choose from Gallery")) {
-                // Open gallery intent
-                Intent pickPhotoIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhotoIntent, REQUEST_IMAGE_PICK);
-            } else if (options[item].equals("Cancel")) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
-    }
-
-    private void displaySelectedImage(Bitmap bitmap) {
-        // Display the selected image in ImageView
-        if (selectedImageView != null) {
-            selectedImageView.setImageBitmap(bitmap);
-            selectedImageView.setVisibility(View.VISIBLE);
-        } else {
-            Log.e(TAG, "displaySelectedImage: selectedImageView is null");
-        }
-    }
-    private void setupViews() {
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mMessageDatabaseReference = mFirebaseDatabase.getReference();
-
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            user = currentUser.getDisplayName();
-            userEmail = currentUser.getEmail();
-        } else {
-            user = "anonymous";
-        }
+    private void setupViews(FirebaseUser currentFirebaseUser) {
+        mMessageDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        user = currentFirebaseUser.getDisplayName() != null ? currentFirebaseUser.getDisplayName() : "anonymous";
 
         mMessageEditText = findViewById(R.id.drugNameEditText);
         mScientificNameEditText = findViewById(R.id.ScientificNameEditText);
-        mhowToApplyEditText = findViewById(R.id.howToApplyEditText);
+        mHowToApplyEditText = findViewById(R.id.howToApplyEditText);
         mMedicinalPlantsEditText = findViewById(R.id.medicinalPlantsEditText);
         mModeOfPreparationEditText = findViewById(R.id.modeOfPreparationEditText);
         viableRadioGroup = findViewById(R.id.viableRadioGroup);
+        yesRadioButton = findViewById(R.id.yesRadioButton);
+        noRadioButton = findViewById(R.id.noRadioButton);
         mSendButton = findViewById(R.id.sendButton);
         mYearsUsedEditText = findViewById(R.id.yearsUsedEditText);
         mLivingAreaSinceEditText = findViewById(R.id.livingAreaSinceEditText);
 
         TextInputLayout yearsUsedTextInputLayout = findViewById(R.id.yearsUsedTextInputLayout);
-
         viableRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.yesRadioButton) {
                 yearsUsedTextInputLayout.setVisibility(View.VISIBLE);
             } else {
                 yearsUsedTextInputLayout.setVisibility(View.GONE);
-                mYearsUsedEditText.setText(""); // Clear the EditText when "No" is selected
+                mYearsUsedEditText.setText("");
             }
         });
 
-//        mProfileButton.setOnClickListener(v -> redirection());
-
+        mSendButton.setEnabled(false);
         mMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -267,11 +165,7 @@ public class DrugDetails extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().trim().length() > 0) {
-                    mSendButton.setEnabled(true);
-                } else {
-                    mSendButton.setEnabled(false);
-                }
+                mSendButton.setEnabled(charSequence.toString().trim().length() > 0);
             }
 
             @Override
@@ -285,58 +179,33 @@ public class DrugDetails extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        // Apply language when activity is resumed
         LanguageManager.applyLanguage(this);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) { // Check if the back button is pressed
-            // Redirect to UserInfoActivity
-            Log.d(TAG, "onOptionsItemSelected: userInfo");
-
-
-
-
-
-
-//--------->>>>>            //URGENT
-            //It should redirect to the users list(for Aarogya Mitra portal)
-            startActivity(new Intent(DrugDetails.this, HomeDummy.class));
+        if (item.getItemId() == android.R.id.home) {
+            finish();
             return true;
         }
 
-        int id = item.getItemId();
-        if (id == R.id.action_change_language) {
-            // Implement logic to change language
-            // For example, you can show a dialog to let the user select the language
+        if (item.getItemId() == R.id.action_change_language) {
             showLanguageSelectionDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
-
     }
 
-
     private void showLanguageSelectionDialog() {
-        // Implement code to show a dialog for language selection
-        // You can use AlertDialog or create a custom dialog
-        // When the user selects a language, update the locale configuration and refresh UI
-        // Example:
         new AlertDialog.Builder(this)
                 .setTitle("Select Language")
                 .setItems(R.array.languages, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                updateLocale("en"); // English
-                                break;
-                            case 1:
-                                updateLocale("as"); // Assamese
-                                break;
-                            // Add cases for other languages if needed
+                        if (which == 0) {
+                            updateLocale("en");
+                        } else if (which == 1) {
+                            updateLocale("as");
                         }
                         refreshUI();
                     }
@@ -349,349 +218,280 @@ public class DrugDetails extends AppCompatActivity {
         Locale.setDefault(locale);
 
         Configuration config = new Configuration();
-        config.locale = locale;
-
+        config.setLocale(locale);
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 
     private void refreshUI() {
-        // You may need to recreate the activity for changes to take effect
         Intent intent = getIntent();
         finish();
         startActivity(intent);
     }
 
+    private void showImageSelectionOptions() {
+        CharSequence[] options = {
+                getString(R.string.capture_image),
+                getString(R.string.select_image),
+                "Cancel"
+        };
+        new AlertDialog.Builder(this)
+                .setTitle("Select Option")
+                .setItems(options, (dialog, item) -> {
+                    if (item == 0) {
+                        captureImageLauncher.launch(null);
+                    } else if (item == 1) {
+                        pickImageLauncher.launch("image/*");
+                    } else {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
 
-    private void redirection() {
-        Log.d("MainActivity", "onClick: mProfileButton");
-//        Intent intent = new Intent(UserDetails.this, ProfileActivity.class);
-//        intent.putExtra("name", user); // Pass user name retrieved from Google auth
-//        intent.putExtra("email", userEmail); // Pass user email retrieved from Google auth
-        Log.d(TAG, "redirection: Profile");
-//        startActivity(intent);
+    private Bitmap loadBitmapFromUri(Uri uri) throws IOException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), uri);
+            return ImageDecoder.decodeBitmap(source);
+        }
+        return MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
     }
 
     private void saveDataToFirebase() {
         String message = mMessageEditText.getText().toString().trim();
         String scientificName = mScientificNameEditText.getText().toString().trim();
-        String howToApply = mhowToApplyEditText.getText().toString().trim();
+        String howToApply = mHowToApplyEditText.getText().toString().trim();
         String medicinalPlants = mMedicinalPlantsEditText.getText().toString().trim();
         String modeOfPreparation = mModeOfPreparationEditText.getText().toString().trim();
+
         boolean isViable;
-        int checkedRadioButtonId = viableRadioGroup.getCheckedRadioButtonId();
-        if (checkedRadioButtonId == R.id.yesRadioButton) {
+        if (yesRadioButton.isChecked()) {
             isViable = true;
-        } else if (checkedRadioButtonId == R.id.noRadioButton) {
+        } else if (noRadioButton.isChecked()) {
             isViable = false;
         } else {
-            // Neither Yes nor No radio button is checked
             Toast.makeText(this, "Please select whether the drug is viable or not", Toast.LENGTH_SHORT).show();
             return;
         }
-        String yearsUsedSinceText = mYearsUsedEditText.getText().toString().trim();
-        int yearsUsedSince = 0;
 
-        if (!yearsUsedSinceText.isEmpty()) {
-            yearsUsedSince = Integer.parseInt(yearsUsedSinceText);
+        int yearsUsedSince;
+        int livingAreaSince;
+        try {
+            yearsUsedSince = parseIntegerOrZero(mYearsUsedEditText.getText().toString().trim());
+            livingAreaSince = parseIntegerOrZero(mLivingAreaSinceEditText.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Please enter valid numeric values", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        String livingAreaSinceText = mLivingAreaSinceEditText.getText().toString().trim();
-        int livingAreaSince = 0;
-
-
-        if (!livingAreaSinceText.isEmpty()) {
-            livingAreaSince = Integer.parseInt(livingAreaSinceText);
-        }
-
-        if (message.isEmpty() || scientificName.isEmpty() || howToApply.isEmpty() || medicinalPlants.isEmpty() || modeOfPreparation.isEmpty()) {
+        if (message.isEmpty() || scientificName.isEmpty() || howToApply.isEmpty()
+                || medicinalPlants.isEmpty() || modeOfPreparation.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        final String scientificNameLowerCase = scientificName.toLowerCase(); // Convert to lowercase for case-insensitive comparison
-        String new_scientificNameLowerCase = capitalizeFirstLetter(scientificNameLowerCase);
-
-        int finalYearsUsedSince = yearsUsedSince;
-        int finalLivingAreaSince = livingAreaSince;
-
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Uploading data, please wait...");
-        progressDialog.setCancelable(false);
+        String normalizedScientificName = capitalizeFirstLetter(scientificName.toLowerCase());
+        AlertDialog progressDialog = buildProgressDialog();
         progressDialog.show();
 
-        mMessageDatabaseReference.child("drugs").orderByChild("Scientific name").equalTo(new_scientificNameLowerCase)
+        mMessageDatabaseReference.child("drugs")
+                .orderByChild("Scientific name")
+                .equalTo(normalizedScientificName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            // Drug with the same scientific name already exists
-                            progressDialog.dismiss(); // Dismiss progress dialog
+                            progressDialog.dismiss();
                             Toast.makeText(DrugDetails.this, "Drug with scientific name already exists", Toast.LENGTH_SHORT).show();
-                        } else {
-                            // Drug doesn't exist, proceed with adding it
-                            // Upload images to Firebase Storage and get the download URLs
-                            uploadImagesAndAddDrug(message, new_scientificNameLowerCase, howToApply, medicinalPlants, modeOfPreparation, isViable, finalYearsUsedSince, finalLivingAreaSince, progressDialog);
-//                            clearFieldsAndRecyclerView();
+                            return;
                         }
+
+                        uploadImagesAndAddDrug(
+                                message,
+                                normalizedScientificName,
+                                howToApply,
+                                medicinalPlants,
+                                modeOfPreparation,
+                                isViable,
+                                yearsUsedSince,
+                                livingAreaSince,
+                                progressDialog
+                        );
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        progressDialog.dismiss(); // Dismiss progress dialog
+                        progressDialog.dismiss();
                         Toast.makeText(DrugDetails.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
+    private int parseIntegerOrZero(String value) {
+        if (value == null || value.isEmpty()) {
+            return 0;
+        }
+        return Integer.parseInt(value);
+    }
+
     private String capitalizeFirstLetter(String input) {
         if (input == null || input.isEmpty()) {
-            return input; // Return input as is if it's null or empty
+            return input;
         }
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 
-    private void uploadImagesAndAddDrug(String message, String scientificNameLowerCase, String howToApply, String medicinalPlants, String modeOfPreparation, boolean isViable, int yearsUsedSince, int livingAreaSince, ProgressDialog progressDialog) {
+    private void uploadImagesAndAddDrug(
+            String message,
+            String scientificName,
+            String howToApply,
+            String medicinalPlants,
+            String modeOfPreparation,
+            boolean isViable,
+            int yearsUsedSince,
+            int livingAreaSince,
+            AlertDialog progressDialog
+    ) {
         ArrayList<String> imageUrls = new ArrayList<>();
-//        int totalSelectedImages = selectedImagesList.size(); // Store the total number of selected images
-//        int successfulUploads = 0;
+        if (selectedImagesList.isEmpty()) {
+            addDrugToDatabase(message, scientificName, howToApply, medicinalPlants, modeOfPreparation,
+                    isViable, yearsUsedSince, livingAreaSince, imageUrls, progressDialog);
+            return;
+        }
 
-        // Check if any images are selected
-        if (!selectedImagesList.isEmpty()) {
-            Log.d(TAG, "uploadImagesAndAddDrug: enterd the upload images and add drug method");
-            int[] successfulUploads = {0}; // Declare as an array to make it effectively final
+        int[] successfulUploads = {0};
+        for (Bitmap bitmap : selectedImagesList) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference()
+                    .child("images")
+                    .child(System.currentTimeMillis() + "_" + successfulUploads[0] + ".jpg");
 
-            // Iterate over each selected image
-            for (Bitmap bitmap : selectedImagesList) {
-                Log.d(TAG, "uploadImagesAndAddDrug: enterd the loop and iterating for every image");
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReference().child("images").child(System.currentTimeMillis() + ".jpg");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, baos);
+            byte[] data = baos.toByteArray();
 
-                // Convert bitmap to byte array
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte[] data = baos.toByteArray();
-
-                // Upload byte array to Firebase Storage
-                UploadTask uploadTask = storageRef.putBytes(data);
-                uploadTask.addOnSuccessListener(taskSnapshot -> {
-                    Log.d(TAG, "uploadImagesAndAddDrug: Now uploading the image and getting the url");
-                    // Image uploaded successfully
-                    // Get the download URL of the uploaded image
-                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        // Add the URL to the list
-                        imageUrls.add(uri.toString());
-                        successfulUploads[0]++; // Increment counter
-
-                        // If all images are uploaded, call addDrugToDatabase
-                        if (successfulUploads[0] == selectedImagesList.size()) {
-                            Log.d(TAG, "uploadImagesAndAddDrug: now all the images are uploaded, adding the object to realtime database");
-                            addDrugToDatabase(message, scientificNameLowerCase, howToApply, medicinalPlants, modeOfPreparation, isViable, yearsUsedSince, livingAreaSince, imageUrls, progressDialog);
-                            Log.d(TAG, "uploadImagesAndAddDrug: successfully uploaded the data to realtime database");
-                        }
+            storageRef.putBytes(data)
+                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
+                            .addOnSuccessListener(uri -> {
+                                imageUrls.add(uri.toString());
+                                successfulUploads[0]++;
+                                if (successfulUploads[0] == selectedImagesList.size()) {
+                                    addDrugToDatabase(message, scientificName, howToApply, medicinalPlants,
+                                            modeOfPreparation, isViable, yearsUsedSince, livingAreaSince,
+                                            imageUrls, progressDialog);
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                progressDialog.dismiss();
+                                Toast.makeText(DrugDetails.this, "Failed to fetch uploaded image URL", Toast.LENGTH_SHORT).show();
+                            }))
+                    .addOnFailureListener(exception -> {
+                        progressDialog.dismiss();
+                        Toast.makeText(DrugDetails.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
                     });
-                }).addOnFailureListener(exception -> {
-                    // Handle unsuccessful uploads
-                    progressDialog.dismiss(); // Dismiss progress dialog
-                    Toast.makeText(DrugDetails.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
-                });
-            }
-        } else {
-            // If no images selected, directly add drug to database
-            Log.d(TAG, "uploadImagesAndAddDrug: No images, directly addding data to realtime database");
-            addDrugToDatabase(message, scientificNameLowerCase, howToApply, medicinalPlants, modeOfPreparation, isViable, yearsUsedSince, livingAreaSince, new ArrayList<>(), progressDialog);
         }
     }
 
-private void addDrugToDatabase(String message, String scientificName, String howToApply, String medicinalPlants, String modeOfPreparation, boolean isViable, int yearsUsedSince, int livingAreaSince, ArrayList<String> imageUrls, ProgressDialog progressDialog) {
-    Log.d(TAG, "addDrugToDatabase: inside add drug to database");
-    String key = mMessageDatabaseReference.child("drug_to_be_validated").push().getKey();
-    if (key != null) {
-        // Save user details first
-        mMessageDatabaseReference.child("drug_to_be_validated").child(key).child("Aarogya Mitra").setValue(user)
-                .addOnSuccessListener(aVoid -> {
-                    // User details saved successfully, now save other drug details
-                    mMessageDatabaseReference.child("drug_to_be_validated").child(key).child("Drug Name").setValue(message)
-                            .addOnSuccessListener(aVoid1 -> {
-                                mMessageDatabaseReference.child("drug_to_be_validated").child(key).child("scientificName").setValue(scientificName)
-                                        .addOnSuccessListener(aVoid2 -> {
-                                            mMessageDatabaseReference.child("drug_to_be_validated").child(key).child("howToApply").setValue(howToApply)
-                                                    .addOnSuccessListener(aVoid3 -> {
-                                                        mMessageDatabaseReference.child("drug_to_be_validated").child(key).child("medicinalPlants").setValue(medicinalPlants)
-                                                                .addOnSuccessListener(aVoid4 -> {
-                                                                    mMessageDatabaseReference.child("drug_to_be_validated").child(key).child("modeOfPreparation").setValue(modeOfPreparation)
-                                                                            .addOnSuccessListener(aVoid5 -> {
-                                                                                mMessageDatabaseReference.child("drug_to_be_validated").child(key).child("isViable").setValue(isViable)
-                                                                                        .addOnSuccessListener(aVoid6 -> {
-                                                                                            if (isViable) {
-                                                                                                mMessageDatabaseReference.child("drug_to_be_validated").child(key).child("yearsUsedSince").setValue(yearsUsedSince)
-                                                                                                        .addOnSuccessListener(aVoid7 -> {
-                                                                                                            mMessageDatabaseReference.child("drug_to_be_validated").child(key).child("livingAreaSince").setValue(livingAreaSince)
-                                                                                                                    .addOnSuccessListener(aVoid8 -> {
-                                                                                                                        // Add the Client field with the value from currentUser
-                                                                                                                        mMessageDatabaseReference.child("drug_to_be_validated").child(key).child("Client").setValue(currentUser)
-                                                                                                                                .addOnSuccessListener(aVoid9 -> {
-                                                                                                                                    // All data saved successfully, now save image URLs
-                                                                                                                                    Log.d(TAG, "addDrugToDatabase: adding images and urls to database->line 518");
-                                                                                                                                    saveImageUrlsToDatabase(key, imageUrls, progressDialog);
-                                                                                                                                    // Clear all fields and the RecyclerView
-                                                                                                                                    // clearFieldsAndRecyclerView();
-                                                                                                                                    progressDialog.dismiss(); // Dismiss progress dialog
-                                                                                                                                    Log.d(TAG, "addDrugToDatabase: successfully added data to database");
-                                                                                                                                    Toast.makeText(DrugDetails.this, "Data uploaded successfully", Toast.LENGTH_SHORT).show();
-                                                                                                                                })
-                                                                                                                                .addOnFailureListener(e -> {
-                                                                                                                                    progressDialog.dismiss(); // Dismiss progress dialog
-                                                                                                                                    Toast.makeText(DrugDetails.this, "Failed to add Client: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                                                                                });
-                                                                                                                    })
-                                                                                                                    .addOnFailureListener(e -> {
-                                                                                                                        progressDialog.dismiss(); // Dismiss progress dialog
-                                                                                                                        Toast.makeText(DrugDetails.this, "Failed to add livingAreaSince: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                                                                    });
-                                                                                                        })
-                                                                                                        .addOnFailureListener(e -> {
-                                                                                                            progressDialog.dismiss(); // Dismiss progress dialog
-                                                                                                            Toast.makeText(DrugDetails.this, "Failed to add yearsUsedSince: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                                                        });
-                                                                                            } else {
-                                                                                                // Add the Client field with the value from currentUser
-                                                                                                mMessageDatabaseReference.child("drug_to_be_validated").child(key).child("Client").setValue(currentUser)
-                                                                                                        .addOnSuccessListener(aVoid9 -> {
-                                                                                                            // All data saved successfully, now save image URLs
-                                                                                                            saveImageUrlsToDatabase(key, imageUrls, progressDialog);
-                                                                                                            progressDialog.dismiss(); // Dismiss progress dialog
-                                                                                                        })
-                                                                                                        .addOnFailureListener(e -> {
-                                                                                                            progressDialog.dismiss(); // Dismiss progress dialog
-                                                                                                            Toast.makeText(DrugDetails.this, "Failed to add Client: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                                                        });
-                                                                                            }
-                                                                                        })
-                                                                                        .addOnFailureListener(e -> {
-                                                                                            progressDialog.dismiss(); // Dismiss progress dialog
-                                                                                            Toast.makeText(DrugDetails.this, "Failed to add isViable: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                                        });
-                                                                            })
-                                                                            .addOnFailureListener(e -> {
-                                                                                progressDialog.dismiss(); // Dismiss progress dialog
-                                                                                Toast.makeText(DrugDetails.this, "Failed to add modeOfPreparation: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                            });
-                                                                })
-                                                                .addOnFailureListener(e -> {
-                                                                    progressDialog.dismiss(); // Dismiss progress dialog
-                                                                    Toast.makeText(DrugDetails.this, "Failed to add medicinalPlants: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                });
-                                                    })
-                                                    .addOnFailureListener(e -> {
-                                                        progressDialog.dismiss(); // Dismiss progress dialog
-                                                        Toast.makeText(DrugDetails.this, "Failed to add howToApply: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                    });
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            progressDialog.dismiss(); // Dismiss progress dialog
-                                            Toast.makeText(DrugDetails.this, "Failed to add scientificName: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        });
-                            })
-                            .addOnFailureListener(e -> {
-                                progressDialog.dismiss(); // Dismiss progress dialog
-                                Toast.makeText(DrugDetails.this, "Failed to add message: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    progressDialog.dismiss(); // Dismiss progress dialog
-                    Toast.makeText(DrugDetails.this, "Failed to add user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+    private void addDrugToDatabase(
+            String message,
+            String scientificName,
+            String howToApply,
+            String medicinalPlants,
+            String modeOfPreparation,
+            boolean isViable,
+            int yearsUsedSince,
+            int livingAreaSince,
+            ArrayList<String> imageUrls,
+            AlertDialog progressDialog
+    ) {
+        String key = mMessageDatabaseReference.child("drug_to_be_validated").push().getKey();
+        if (key == null) {
+            progressDialog.dismiss();
+            Toast.makeText(this, "Failed to create a database entry", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String basePath = "drug_to_be_validated/" + key + "/";
+        Map<String, Object> drugData = new HashMap<>();
+        drugData.put(basePath + "Aarogya Mitra", user);
+        drugData.put(basePath + "Drug Name", message);
+        drugData.put(basePath + "scientificName", scientificName);
+        drugData.put(basePath + "howToApply", howToApply);
+        drugData.put(basePath + "medicinalPlants", medicinalPlants);
+        drugData.put(basePath + "modeOfPreparation", modeOfPreparation);
+        drugData.put(basePath + "isViable", isViable);
+        drugData.put(basePath + "Client", currentUser);
+        if (isViable) {
+            drugData.put(basePath + "yearsUsedSince", yearsUsedSince);
+            drugData.put(basePath + "livingAreaSince", livingAreaSince);
+        }
+        for (String url : imageUrls) {
+            String imageKey = mMessageDatabaseReference.child("drug_to_be_validated")
+                    .child(key).child("imageUrls").push().getKey();
+            if (imageKey != null) {
+                drugData.put(basePath + "imageUrls/" + imageKey, url);
+            }
+        }
+
+        mMessageDatabaseReference.updateChildren(drugData)
+                .addOnSuccessListener(aVoid -> onDrugSaved(progressDialog))
+                .addOnFailureListener(e -> handleDatabaseFailure(progressDialog, "Failed to save drug: " + e.getMessage()));
     }
-}
 
-private void saveImageUrlsToDatabase(String drugKey, ArrayList<String> imageUrls, ProgressDialog progressDialog) {
-    // Save image URLs to the database under the specific drug key
-    Log.d(TAG, "saveImageUrlsToDatabase: inside save image urls to database");
-    for (String url : imageUrls) {
-        mMessageDatabaseReference.child("drug_to_be_validated").child(drugKey).child("imageUrls").push().setValue(url)
-                .addOnSuccessListener(aVoid -> {
-                    // Image URL saved successfully
-                    Log.d(TAG, "saveImageUrlsToDatabase: added one image successfully");
-                    Toast.makeText(DrugDetails.this, "Image URL added successfully", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    // Failed to save image URL
-                    Toast.makeText(DrugDetails.this, "Failed to add image URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-        progressDialog.dismiss(); // Dismiss progress dialog
+    private void onDrugSaved(AlertDialog progressDialog) {
+        progressDialog.dismiss();
+        clearFieldsAndRecyclerView();
+        Toast.makeText(this, "Drug added successfully", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, UserInfoActivity.class));
     }
-    clearFieldsAndRecyclerView();
-    Toast.makeText(DrugDetails.this, "Drug added successfully ;)", Toast.LENGTH_SHORT).show();
 
-    startActivity(new Intent(DrugDetails.this, UserInfoActivity.class));
-}
-
+    private void handleDatabaseFailure(AlertDialog progressDialog, String message) {
+        progressDialog.dismiss();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
 
     private void clearFieldsAndRecyclerView() {
-        Log.d(TAG, "clearFieldsAndRecyclerView: clearing all the fields");
-        // Clear all EditText fields
         mMessageEditText.setText("");
         mScientificNameEditText.setText("");
-        mhowToApplyEditText.setText("");
+        mHowToApplyEditText.setText("");
         mMedicinalPlantsEditText.setText("");
         mModeOfPreparationEditText.setText("");
         mYearsUsedEditText.setText("");
         mLivingAreaSinceEditText.setText("");
-
-        // Clear radio button selection
         viableRadioGroup.clearCheck();
-
-        // Clear selected images list and notify adapter
         selectedImagesList.clear();
+        imageRecyclerView.setVisibility(View.INVISIBLE);
         imageAdapter.notifyDataSetChanged();
-        Log.d(TAG, "clearFieldsAndRecyclerView: successfully cleared all the fields");
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private AlertDialog buildProgressDialog() {
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.HORIZONTAL);
+        int dp16 = Math.round(16 * getResources().getDisplayMetrics().density);
+        layout.setPadding(dp16, dp16, dp16, dp16);
+        layout.setGravity(Gravity.CENTER_VERTICAL);
 
-        if (resultCode == RESULT_OK && data != null) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE) {
-                // Image captured from camera
-                Bundle extras = data.getExtras();
-                if (extras != null) {
-                    Bitmap imageBitmap = (Bitmap) extras.get("data");
-                    if (imageBitmap != null) {
-                        addImageToList(imageBitmap);
-                        // Set the RecyclerView visibility to visible
-                        RecyclerView imageRecyclerView = findViewById(R.id.imageRecyclerView);
-                        imageRecyclerView.setVisibility(View.VISIBLE);
-                    }
-                }
-            } else if (requestCode == REQUEST_IMAGE_PICK) {
-                // Image selected from gallery
-                Uri imageUri = data.getData();
-                if (imageUri != null) {
-                    try {
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                        addImageToList(imageBitmap);
-                        // Set the RecyclerView visibility to visible
-                        RecyclerView imageRecyclerView = findViewById(R.id.imageRecyclerView);
-                        imageRecyclerView.setVisibility(View.VISIBLE);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
+        ProgressBar progressBar = new ProgressBar(this);
+        layout.addView(progressBar);
+
+        TextView textView = new TextView(this);
+        textView.setText("Uploading data, please wait...");
+        textView.setPadding(dp16, 0, 0, 0);
+        layout.addView(textView);
+
+        return new AlertDialog.Builder(this)
+                .setView(layout)
+                .setCancelable(false)
+                .create();
     }
 
     private void addImageToList(Bitmap imageBitmap) {
-        if (selectedImagesList.size() < 5) { // Limiting the number of images to 5
-            selectedImagesList.add(imageBitmap);
-            int size = selectedImagesList.size();
-            Log.d(TAG, "addImageToList: " + size);
-            imageAdapter.notifyDataSetChanged(); // Notify the adapter that data has changed
-        } else {
+        if (selectedImagesList.size() >= 5) {
             Toast.makeText(this, "You can select up to 5 images", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        selectedImagesList.add(imageBitmap);
+        imageRecyclerView.setVisibility(View.VISIBLE);
+        imageAdapter.notifyDataSetChanged();
     }
-
-
 }

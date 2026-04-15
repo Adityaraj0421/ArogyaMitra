@@ -3,6 +3,7 @@ package com.example.indegenousmedicine2;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ public class MedicineListActivity extends AppCompatActivity {
     private List<Medicine> drugList = new ArrayList<>();
     private DatabaseReference mMessageDatabaseReference;
     private String currentUser;
+    private ValueEventListener drugsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,35 +59,48 @@ public class MedicineListActivity extends AppCompatActivity {
     }
 
     private void fetchDrugsForCurrentUser() {
-        mMessageDatabaseReference.child("drug_to_be_validated").orderByChild("Aarogya Mitra").equalTo(currentUser)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        drugList.clear();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            String key = snapshot.getKey(); // Get the unique key from the database
-                            String name = snapshot.child("Drug Name").getValue(String.class);
-                            String scientificName = snapshot.child("scientificName").getValue(String.class);
-                            drugList.add(new Medicine(key, name, scientificName));
-                        }
-                        drugAdapter.notifyDataSetChanged();
-                    }
+        drugsListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                drugList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey();
+                    String name = snapshot.child("Drug Name").getValue(String.class);
+                    String scientificName = snapshot.child("scientificName").getValue(String.class);
+                    drugList.add(new Medicine(key, name, scientificName));
+                }
+                drugAdapter.notifyDataSetChanged();
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Handle possible errors
-                    }
-                });
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(MedicineListActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
+        mMessageDatabaseReference.child("drug_to_be_validated")
+                .orderByChild("Aarogya Mitra")
+                .equalTo(currentUser)
+                .addValueEventListener(drugsListener);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            // Handle back button press
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (drugsListener != null) {
+            mMessageDatabaseReference.child("drug_to_be_validated")
+                    .orderByChild("Aarogya Mitra")
+                    .equalTo(currentUser)
+                    .removeEventListener(drugsListener);
+        }
     }
 
 }

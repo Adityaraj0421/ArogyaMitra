@@ -39,6 +39,7 @@ public class HomeDummy extends AppCompatActivity {
         private ImageView drugListQS2;
         private ImageView addDrugIcon;
         private ImageView newsletterIcon;
+        private ImageView identifyLeafIcon;
         private SearchView searchView;
         private List<String> featureList;
 
@@ -225,6 +226,12 @@ public class HomeDummy extends AppCompatActivity {
                     Intent intent = new Intent(HomeDummy.this, DrugDetails.class);
                     startActivity(intent);
                 }
+            });
+
+            // Wire Identify Leaf icon to LeafPredictionActivity
+            identifyLeafIcon = findViewById(R.id.identify_leaf_QS);
+            identifyLeafIcon.setOnClickListener(v -> {
+                startActivity(new Intent(HomeDummy.this, LeafPredictionActivity.class));
             });
 
             // Set a query text listener to listen for changes in the search query

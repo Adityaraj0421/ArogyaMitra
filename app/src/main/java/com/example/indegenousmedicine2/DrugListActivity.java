@@ -1,21 +1,18 @@
 package com.example.indegenousmedicine2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-//import com.google.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,107 +23,140 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 public class DrugListActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 123;
+    public static final String EXTRA_PLANT_QUERY = "PLANT_QUERY";
+
     private RecyclerView recyclerViewDrugs;
-    private ArrayList<String> drugNames;
-    private DrugAdapter adapter;
+    private ArrayList<Medicine> medicines;
+    private MedicineAdapter adapter;
     private DatabaseReference databaseReference;
     private FirebaseUser currentUser;
+    private ValueEventListener drugsListener;
+    private Query drugsQuery;
 
+    private final ActivityResultLauncher<Intent> signInLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                    if (currentUser != null) {
+                        retrieveDrugsForCurrentUser(currentUser);
+                    } else {
+                        Toast.makeText(this, "Failed to sign in.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                } else {
+                    IdpResponse response = IdpResponse.fromResultIntent(result.getData());
+                    if (response != null) {
+                        Toast.makeText(this, "Sign in failed: " + response.getError().getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Sign in failed.", Toast.LENGTH_SHORT).show();
+                    }
+                    finish();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drug_list);
-        // Apply language when activity is created
         LanguageManager.applyLanguage(this);
 
-//        recyclerViewDrugs = findViewById(R.id.recyclerViewDrugs);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        recyclerViewDrugs = findViewById(R.id.recyclerViewDrugs);
         recyclerViewDrugs.setLayoutManager(new LinearLayoutManager(this));
 
-        Log.d("DrugListActivity", "line52");
-
-        drugNames = new ArrayList<>();
-//        adapter = new DrugAdapter(DrugListActivity.this, drugNames);
+        medicines = new ArrayList<>();
+        adapter = new MedicineAdapter(this, medicines);
         recyclerViewDrugs.setAdapter(adapter);
 
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            // If user is null, start Google sign-in flow
-            signInWithGoogle();
+        String plantQuery = getIntent().getStringExtra(EXTRA_PLANT_QUERY);
+        if (plantQuery != null && !plantQuery.isEmpty()) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(plantQuery);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+            retrieveDrugsByPlantName(plantQuery);
         } else {
-            // If user is not null, retrieve drugs for current user
-            String user = currentUser.getDisplayName();
-            Log.d("DrugListActivity", "onCreate: "+user);
-            retrieveDrugsForCurrentUser(currentUser);
+            currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser == null) {
+                signInWithGoogle();
+            } else {
+                retrieveDrugsForCurrentUser(currentUser);
+            }
         }
-//        // Retrieve drug names from Firebase
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                drugNames.clear(); // Clear the list before adding new items
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    String drugName = snapshot.getKey(); // Get the drug name from the snapshot key
-//                    drugNames.add(drugName); // Add the drug name to the list
-//                }
-//                adapter.notifyDataSetChanged(); // Notify the adapter of changes in the data
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                // Handle database error
-//            }
-//        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        // Apply language when activity is resumed
         LanguageManager.applyLanguage(this);
     }
 
     private void signInWithGoogle() {
-        // Choose authentication providers
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.GoogleBuilder().build());
-
-        // Create and launch sign-in intent
-        startActivityForResult(
+        signInLauncher.launch(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
-                        .build(),
-                RC_SIGN_IN);
+                        .build());
     }
 
     private void retrieveDrugsForCurrentUser(FirebaseUser user) {
-        // Retrieve current user's ID
-        String userId = user.getUid();
         String userName = user.getDisplayName();
 
-        // Query "drugs" collection based on current user's ID
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("drugs");
-        Query query = databaseReference.orderByChild("user").equalTo(userName);
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("drug_to_be_validated");
+        drugsQuery = databaseReference.orderByChild("Aarogya Mitra").equalTo(userName);
 
-        // Retrieve drug names from Firebase
-        query.addValueEventListener(new ValueEventListener() {
+        drugsListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                drugNames.clear(); // Clear the list before adding new items
+                medicines.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String drugName = snapshot.child("message").getValue(String.class); // Get the drug name from the snapshot key
-                    drugNames.add(drugName); // Add the drug name to the list
+                    String key = snapshot.getKey();
+                    String drugName = snapshot.child("Drug Name").getValue(String.class);
+                    String scientificName = snapshot.child("scientificName").getValue(String.class);
+                    medicines.add(new Medicine(key, drugName, scientificName));
                 }
-                adapter.notifyDataSetChanged(); // Notify the adapter of changes in the data
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(DrugListActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
+        drugsQuery.addValueEventListener(drugsListener);
+    }
+
+    private void retrieveDrugsByPlantName(String plantQuery) {
+        List<String> keywords = extractKeywords(plantQuery);
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("drug_to_be_validated");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                medicines.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey();
+                    String drugName = snapshot.child("Drug Name").getValue(String.class);
+                    String scientificName = snapshot.child("scientificName").getValue(String.class);
+                    if (drugMatchesQuery(drugName, keywords) || drugMatchesQuery(scientificName, keywords)) {
+                        medicines.add(new Medicine(key, drugName, scientificName));
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                if (medicines.isEmpty()) {
+                    Toast.makeText(DrugListActivity.this, R.string.no_drugs_available, Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -136,32 +166,42 @@ public class DrugListActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
+    private List<String> extractKeywords(String label) {
+        List<String> keywords = new ArrayList<>();
+        String lower = label.toLowerCase(Locale.US);
+        keywords.add(lower);
+        int start = label.indexOf('(');
+        int end = label.indexOf(')');
+        if (start >= 0 && end > start) {
+            keywords.add(label.substring(start + 1, end).trim().toLowerCase(Locale.US));
+            keywords.add(label.substring(0, start).trim().toLowerCase(Locale.US));
+        }
+        return keywords;
+    }
 
-            if (resultCode == RESULT_OK) {
-                // Successfully signed in
-                currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (currentUser != null) {
-                    // If user is not null, retrieve drugs for current user
-                    retrieveDrugsForCurrentUser(currentUser);
-                } else {
-                    // Handle scenario where user is still null after sign-in
-                    Toast.makeText(this, "Failed to sign in.", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            } else {
-                // Sign in failed
-                if (response != null) {
-                    Toast.makeText(this, "Sign in failed: " + response.getError().getMessage(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Sign in failed.", Toast.LENGTH_SHORT).show();
-                }
-                finish();
-            }
+    private boolean drugMatchesQuery(String field, List<String> keywords) {
+        if (field == null) return false;
+        String lower = field.toLowerCase(Locale.US);
+        for (String kw : keywords) {
+            if (lower.contains(kw) || kw.contains(lower)) return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (drugsQuery != null && drugsListener != null) {
+            drugsQuery.removeEventListener(drugsListener);
         }
     }
 }

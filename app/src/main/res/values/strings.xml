@@ -7,7 +7,7 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="previous">Previous</string>
     <string name="lorem_ipsum">Hello</string>
-    <string name="default_web_client_id">756726594856-l979s32koj3cjutmcci595qbmkgeh0fa.apps.googleusercontent.com</string>
+
     <string name="title_user_info">User\'s Info</string>
     <string name="hint_name">Name</string>
     <string name="hint_age">Age</string>
@@ -74,6 +74,7 @@
     <string name="address_hint">Address</string>
     <string name="area_since_hint">Area Since</string>
     <string name="select_image">Select Image</string>
+    <string name="capture_image">Capture Image</string>
     <string name="drugs_added">Drugs Added</string>
     <string name="users_list">Users List</string>
     <string name="drug_details">Drug Details</string>
@@ -98,4 +99,15 @@
     <string name="photograph">Photograph</string>
     <string name="medicinal_use">Medicinal Use:</string>
     <string name="medicinal_use_value">Medicinal Use Value</string>
+    <string name="identify_leaf">Identify Leaf</string>
+    <string name="leaf_prediction_title">Leaf Classifier</string>
+    <string name="leaf_prediction_subtitle">Capture a leaf or choose an image to run offline plant identification.</string>
+    <string name="prediction_label">Prediction</string>
+    <string name="confidence_label">Confidence</string>
+    <string name="prediction_placeholder">No prediction yet</string>
+    <string name="confidence_placeholder">Confidence will appear here</string>
+    <string name="prediction_error">Unable to run prediction for this image.</string>
+    <string name="model_load_error">Leaf classifier assets could not be loaded.</string>
+    <string name="prediction_loading">Running on-device prediction…</string>
+    <string name="search_drug_records">Find in Drug Database</string>
 </resources>

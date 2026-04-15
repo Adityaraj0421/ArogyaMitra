@@ -46,23 +46,12 @@
         android:layout_marginStart="16dp"
         android:text="@string/drugs"/>
 
-    <!-- Status Tile -->
-    <Button
-        android:id="@+id/statusTile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/userTile"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/status"/>
-
     <!-- New User Tile -->
     <Button
         android:id="@+id/newUserTile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/userTile"
-        android:layout_toEndOf="@id/statusTile"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:text="@string/new_user"/>
@@ -72,11 +61,21 @@
         android:id="@+id/newDrugTile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/statusTile"
+        android:layout_below="@id/userTile"
+        android:layout_toEndOf="@id/newUserTile"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:text="@string/new_drug"
+        android:layout_marginEnd="16dp"/>
+
+    <Button
+        android:id="@+id/identifyLeafTile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/newUserTile"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_alignParentEnd="true"/>
+        android:text="@string/identify_leaf" />
 
 </RelativeLayout>

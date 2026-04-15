@@ -1,42 +1,42 @@
 {
   "project_info": {
-    "project_number": "756726594856",
-    "firebase_url": "https://indigenous-medicine-dummy-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "indigenous-medicine-dummy",
-    "storage_bucket": "indigenous-medicine-dummy.appspot.com"
+    "project_number": "487687852335",
+    "firebase_url": "https://vibhu-project-688eb-default-rtdb.firebaseio.com",
+    "project_id": "vibhu-project-688eb",
+    "storage_bucket": "vibhu-project-688eb.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:756726594856:android:63b6f6aa8c427c9ffea41d",
+        "mobilesdk_app_id": "1:487687852335:android:f42f6d4ea3955d9030d1da",
         "android_client_info": {
           "package_name": "com.example.indegenousmedicine2"
         }
       },
       "oauth_client": [
         {
-          "client_id": "756726594856-l979s32koj3cjutmcci595qbmkgeh0fa.apps.googleusercontent.com",
+          "client_id": "487687852335-3rhps8hc5j2ae747d68gu2gql39n17mj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.indegenousmedicine2",
-            "certificate_hash": "1d10261526e868fe29ec8030f239baf782f54d35"
+            "certificate_hash": "ec6a543b71e190542be078d54c59d3eed64a52a9"
           }
         },
         {
-          "client_id": "756726594856-fd8g6ugu6o8gjlm6f8osahqbogiaoa24.apps.googleusercontent.com",
+          "client_id": "487687852335-aov2elds48mrjed8ekjonc6nr4ld893o.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD3RO1RncqF9alW1-W4N-bTI4mL5YM6usU"
+          "current_key": "AIzaSyDpzlWXGT5Wrq_Y1kQ76JwEylco9KbYLjU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "756726594856-fd8g6ugu6o8gjlm6f8osahqbogiaoa24.apps.googleusercontent.com",
+              "client_id": "487687852335-aov2elds48mrjed8ekjonc6nr4ld893o.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

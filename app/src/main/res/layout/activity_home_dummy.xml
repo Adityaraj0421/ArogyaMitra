@@ -32,22 +32,35 @@
                     android:paddingEnd="8dp"
                     android:src="@drawable/herbal_treatment" />
 
-                <TextView
-                    android:id="@+id/app_name"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="38dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
                     android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="63dp"
-                    android:layout_marginTop="19dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_toEndOf="@id/app_logo"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:text="@string/app_name_new"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
+                    android:layout_marginStart="72dp"
+                    android:layout_toStartOf="@+id/language_icon">
+
+                    <TextView
+                        android:id="@+id/app_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:text="@string/app_name_new"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:text="@string/app_tagline"
+                        android:textColor="#CCFFFFFF"
+                        android:textSize="11sp" />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/language_icon"
@@ -95,6 +108,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appbar"
+        android:layout_above="@id/footer"
         android:padding="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -104,15 +118,32 @@
             android:orientation="vertical">
 
             <!-- Welcome Box -->
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/welcome_message"
+                android:background="@drawable/welcome_card_bg"
+                android:orientation="vertical"
                 android:padding="16dp"
-                android:background="@drawable/border"
-                android:gravity="center"
-                android:textSize="18sp"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/welcome_message"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/welcome_text_accent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_tagline"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_secondary"
+                    android:paddingTop="2dp" />
+            </LinearLayout>
 
             <!-- ViewPager with WormDotsIndicator -->
             <RelativeLayout
@@ -123,7 +154,7 @@
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/viewPager"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="170dp"
                     android:layout_alignParentTop="true"/>
 
                 <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
@@ -132,146 +163,228 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@id/viewPager"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="6dp"/>
             </RelativeLayout>
 
-            <!-- Quick Services -->
+            <!-- Quick Services Header -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/quick_services"
-                android:textSize="18sp"
-                android:paddingBottom="8dp"/>
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:paddingBottom="12dp"/>
 
-            <HorizontalScrollView
+            <!-- Quick Services Grid — Row 1 -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                >
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
 
+                <!-- New User -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
 
-                    <!-- Each Service Card -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:gravity="center"
-                        android:layout_marginEnd="16dp">
+                        android:background="@drawable/svc_bg_blue">
 
                         <ImageView
                             android:id="@+id/new_user_QS"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:src="@drawable/ic_user_details"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/new_user"
-                            android:gravity="center"
-                            android:paddingTop="4dp"/>
-
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/ic_user_details" />
                     </LinearLayout>
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp"
+                        android:text="@string/new_user"
                         android:gravity="center"
-                        android:layout_marginEnd="16dp">
+                        android:textSize="11sp"
+                        android:paddingTop="6dp"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+
+                <!-- New Drug -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
+
+                    <LinearLayout
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:gravity="center"
+                        android:background="@drawable/svc_bg_purple">
 
                         <ImageView
                             android:id="@+id/new_drug_QS"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:src="@drawable/herbalism"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/new_drug"
-                            android:gravity="center"
-                            android:paddingTop="4dp"/>
-
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/herbalism" />
                     </LinearLayout>
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp"
+                        android:text="@string/new_drug"
                         android:gravity="center"
-                        android:layout_marginEnd="16dp">
+                        android:textSize="11sp"
+                        android:paddingTop="6dp"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+
+                <!-- Check Status -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
+
+                    <LinearLayout
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:gravity="center"
+                        android:background="@drawable/svc_bg_amber">
 
                         <ImageView
                             android:id="@+id/status_icon_QS"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:src="@drawable/ic_status"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/check_status"
-                            android:gravity="center"
-                            android:paddingTop="4dp"/>
-
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/ic_status" />
                     </LinearLayout>
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp"
+                        android:text="@string/check_status"
                         android:gravity="center"
-                        android:layout_marginEnd="16dp">
+                        android:textSize="11sp"
+                        android:paddingTop="6dp"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Quick Services Grid — Row 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <!-- Drug List -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
+
+                    <LinearLayout
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:gravity="center"
+                        android:background="@drawable/svc_bg_green">
 
                         <ImageView
                             android:id="@+id/drug_list_QS"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:src="@drawable/ic_medicine_list"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/drug_list"
-                            android:gravity="center"
-                            android:paddingTop="4dp"/>
-
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/ic_medicine_list" />
                     </LinearLayout>
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp"
+                        android:text="@string/drug_list"
                         android:gravity="center"
-                        android:layout_marginEnd="16dp">
+                        android:textSize="11sp"
+                        android:paddingTop="6dp"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+
+                <!-- List of Plants -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
+
+                    <LinearLayout
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:gravity="center"
+                        android:background="@drawable/svc_bg_pink">
 
                         <ImageView
                             android:id="@+id/list_of_plants_QS"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:src="@drawable/ic_plants_list"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/list_of_plants"
-                            android:gravity="center"
-                            android:paddingTop="4dp"/>
-
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/ic_plants_list" />
                     </LinearLayout>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/list_of_plants"
+                        android:gravity="center"
+                        android:textSize="11sp"
+                        android:paddingTop="6dp"
+                        android:textColor="@android:color/black" />
                 </LinearLayout>
 
-            </HorizontalScrollView>
+                <!-- Identify Leaf -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
+
+                    <LinearLayout
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:gravity="center"
+                        android:background="@drawable/svc_bg_teal">
+
+                        <ImageView
+                            android:id="@+id/identify_leaf_QS"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/herbal_treatment" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/identify_leaf"
+                        android:gravity="center"
+                        android:textSize="11sp"
+                        android:paddingTop="6dp"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -324,9 +437,9 @@
 
             <TextView
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="10dp"
-                android:layout_height="wrap_content"
                 android:text="@string/add_drug"/>
 
         </LinearLayout>

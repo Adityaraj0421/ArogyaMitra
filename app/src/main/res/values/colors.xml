@@ -6,4 +6,20 @@
     <color name="button_text">#FFFFFF</color> <!-- White text color -->
     <color name="background_color">#F5F5F5</color>
     <color name="google_button_color">#4285F4</color>
+
+    <!-- Service card pastel backgrounds (Material 100-shade) -->
+    <color name="svc_bg_blue">#BBDEFB</color>
+    <color name="svc_bg_purple">#E1BEE7</color>
+    <color name="svc_bg_amber">#FFECB3</color>
+    <color name="svc_bg_green">#C8E6C9</color>
+    <color name="svc_bg_pink">#F8BBD9</color>
+    <color name="svc_bg_teal">#B2EBF2</color>
+
+    <!-- Welcome card accent -->
+    <color name="welcome_card_bg">#E8F5E9</color>
+    <color name="welcome_card_border">#A5D6A7</color>
+    <color name="welcome_text_accent">#2E7D32</color>
+
+    <!-- Section header -->
+    <color name="text_secondary">#757575</color>
 </resources>

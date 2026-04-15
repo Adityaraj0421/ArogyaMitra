@@ -73,6 +73,7 @@
         <string name="pan_hint">প্যান নম্বৰ</string>
         <string name="address_hint">ঠিকনা</string>
         <string name="select_image">ছবি নিৰ্বাচন কৰক</string>
+        <string name="capture_image">ছবি তোলক</string>
         <string name="area_since_hint">এলাকা কেন্দ্ৰিক কিভা</string>
         <string name="drugs_added">ঔষধ যোগ কৰা হৈছে</string>
         <string name="users_list">ব্যবহারকাৰীৰ তালিকা</string>
@@ -98,4 +99,15 @@
         <string name="photograph">ফটোগ্ৰাফ</string>
         <string name="medicinal_use">ঔষধি ব্যৱহাৰ:</string>
         <string name="medicinal_use_value">ঔষধি ব্যৱহাৰৰ মান</string>
+        <string name="identify_leaf">পাত চিনাক্ত কৰক</string>
+        <string name="leaf_prediction_title">পাত চিনাক্তকৰণ</string>
+        <string name="leaf_prediction_subtitle">পাতৰ ছবি তুলক বা নিৰ্বাচন কৰক আৰু ফোনতেই ফলাফল পাওক।</string>
+        <string name="prediction_label">চিনাক্তকৰণ</string>
+        <string name="confidence_label">বিশ্বাসযোগ্যতা</string>
+        <string name="prediction_placeholder">এতিয়ালৈ কোনো ফলাফল নাই</string>
+        <string name="confidence_placeholder">বিশ্বাসযোগ্যতা ইয়াত দেখা যাব</string>
+        <string name="prediction_error">এই ছবিখনত চিনাক্তকৰণ চলোৱা নগ’ল।</string>
+        <string name="model_load_error">পাত চিনাক্তকৰ্তা সম্পদ লোড কৰিব পৰা নগ’ল।</string>
+        <string name="prediction_loading">ফোনতেই চিনাক্তকৰণ চলি আছে…</string>
+        <string name="search_drug_records">ঔষধৰ তথ্যভাণ্ডাৰত বিচাৰক</string>
 </resources>
