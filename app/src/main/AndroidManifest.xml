@@ -5,8 +5,11 @@
     <!-- Network -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Camera -->
-    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Camera hardware feature — required=false so app can install on devices without camera.
+         We do NOT declare the CAMERA permission here: both TakePicturePreview and GetContent
+         delegate to the system camera / photo-picker app which carries its own CAMERA grant.
+         Declaring the permission without requesting it at runtime would block the camera intent
+         on Android 11+ (system enforces "declared = must be granted"). -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
