@@ -1,5 +1,6 @@
 package com.example.indegenousmedicine2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager.widget.ViewPager;
@@ -9,12 +10,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.appcompat.widget.SearchView;
 
-import androidx.appcompat.widget.Toolbar;;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 
@@ -29,17 +36,23 @@ public class HomeDummy extends AppCompatActivity {
         private ViewPagerAdapter viewPagerAdapter;
         private ImageView languageIcon;
         private ImageView profileIcon;
-        private ImageView newUserIcon;
-        private ImageView newDrugIcon;
-        private ImageView durgListIcon;
+        // QS tile click targets (moved to outer LinearLayout, so View — not ImageView)
+        private View newUserIcon;
+        private View newDrugIcon;
+        private View durgListIcon;
+        private View statusIconQS;
+        private View drugListQS2;
+        private View identifyLeafIcon;
+        // Footer icons stay as ImageView (IDs remain on the ImageView in the layout)
         private ImageView usersListIcon;
         private ImageView statusIcon;
-        private ImageView statusIconQS;
         private ImageView transactionsIcon;
-        private ImageView drugListQS2;
         private ImageView addDrugIcon;
         private ImageView newsletterIcon;
-        private ImageView identifyLeafIcon;
+        // Hero card
+        private TextView heroName;
+        private TextView heroPendingCount;
+        private Query pendingCountQuery;
         private SearchView searchView;
         private List<String> featureList;
 
@@ -52,6 +65,16 @@ public class HomeDummy extends AppCompatActivity {
 
             Toolbar toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
+
+            // Hero card
+            heroName = findViewById(R.id.heroName);
+            heroPendingCount = findViewById(R.id.heroPendingCount);
+            FirebaseUser heroUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (heroUser != null) {
+                String displayName = heroUser.getDisplayName();
+                heroName.setText(getString(R.string.hero_greeting,
+                        (displayName != null && !displayName.isEmpty()) ? displayName : "there"));
+            }
 
             // ViewPager setup
             viewPager = findViewById(R.id.viewPager);
@@ -234,7 +257,26 @@ public class HomeDummy extends AppCompatActivity {
                 startActivity(new Intent(HomeDummy.this, LeafPredictionActivity.class));
             });
 
+            loadPendingCount();
         }
+
+    private void loadPendingCount() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null || heroPendingCount == null) return;
+        String userName = user.getDisplayName() != null ? user.getDisplayName() : "";
+        pendingCountQuery = FirebaseDatabase.getInstance().getReference()
+                .child("drug_to_be_validated")
+                .orderByChild("Aarogya Mitra")
+                .equalTo(userName);
+        pendingCountQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                heroPendingCount.setText(String.valueOf(snapshot.getChildrenCount()));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { /* no-op */ }
+        });
+    }
 
     private void initializeFeatureList() {
         featureList = new ArrayList<>();
