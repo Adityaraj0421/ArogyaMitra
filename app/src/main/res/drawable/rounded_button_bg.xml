@@ -1,6 +1,5 @@
-<!-- rounded_button_bg.xml -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <corners android:radius="8dp" /> <!-- Adjust the radius as needed -->
-    <solid android:color="@color/colorPrimary" /> <!-- Set the button color -->
+    <corners android:radius="@dimen/corner_button" />
+    <solid android:color="@color/green_primary" />
 </shape>

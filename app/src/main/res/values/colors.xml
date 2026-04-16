@@ -4,8 +4,8 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- Theme aliases expected by older layouts and drawables -->
-    <color name="colorPrimary">#4285F4</color>
-    <color name="colorPrimaryDark">#1a5cc9</color>
+    <color name="colorPrimary">#2E7D32</color>
+    <color name="colorPrimaryDark">#1B5E20</color>
     <color name="button_background">#FF4081</color> <!-- Vibrant pink color -->
     <color name="button_text">#FFFFFF</color> <!-- White text color -->
     <color name="background_color">#F5F5F5</color>
@@ -18,6 +18,14 @@
     <color name="svc_bg_green">#C8E6C9</color>
     <color name="svc_bg_pink">#F8BBD9</color>
     <color name="svc_bg_teal">#B2EBF2</color>
+
+    <!-- Fresh Nature green palette -->
+    <color name="green_dark">#1B5E20</color>
+    <color name="green_primary">#2E7D32</color>
+    <color name="green_medium">#388E3C</color>
+    <color name="green_light">#66BB6A</color>
+    <color name="green_50">#E8F5E9</color>
+    <color name="green_pale">#F1F8E9</color>
 
     <!-- Welcome card accent -->
     <color name="welcome_card_bg">#E8F5E9</color>

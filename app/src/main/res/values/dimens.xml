@@ -22,4 +22,10 @@
     <dimen name="text_body">16sp</dimen>
     <dimen name="text_caption">12sp</dimen>
     <dimen name="text_label">11sp</dimen>
+
+    <!-- Card shapes -->
+    <dimen name="corner_card">16dp</dimen>
+    <dimen name="corner_tile">12dp</dimen>
+    <dimen name="corner_button">12dp</dimen>
+    <dimen name="corner_input">10dp</dimen>
 </resources>

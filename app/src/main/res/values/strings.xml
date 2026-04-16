@@ -136,4 +136,50 @@
     <!-- Empty state messages -->
     <string name="empty_drug_list">No drug records added yet</string>
     <string name="empty_people_list">No users found</string>
+
+    <!-- Additional content descriptions for new home layout -->
+    <string name="cd_language_icon">Change language</string>
+    <string name="cd_profile_icon">View profile</string>
+    <string name="cd_users_list_footer">Users list</string>
+    <string name="cd_add_drug_footer">Add drug</string>
+    <string name="cd_status_footer">Status</string>
+    <string name="cd_newsletter_footer">Newsletter</string>
+    <string name="cd_transactions_footer">Transactions</string>
+
+    <!-- Subscription -->
+    <string name="subscription_title">Agroषधि Pro</string>
+    <string name="plan_monthly_price">₹199/month</string>
+    <string name="plan_annual_price">₹1,499/year</string>
+    <string name="plan_annual_saving">Save 37%</string>
+    <string name="plan_per_month_breakdown">₹124.9/mo · billed annually · cancel anytime</string>
+    <string name="plan_best_value">BEST VALUE</string>
+    <string name="plan_continue">Continue</string>
+    <string name="pay_monthly">Pay ₹199 Securely</string>
+    <string name="pay_annual">Pay ₹1,499 Securely</string>
+    <string name="payment_success_title">Payment Successful! 🎉</string>
+    <string name="payment_success_sub">Welcome to Agroषधि Pro</string>
+    <string name="payment_valid_until">Valid until: %1$s</string>
+    <string name="payment_txn_id">Transaction ID: %1$s</string>
+    <string name="start_pro">Start Using Agroषधि Pro →</string>
+    <string name="upi_hint">Enter UPI ID (e.g. name@upi)</string>
+    <string name="card_number_hint">Card Number</string>
+    <string name="card_expiry_hint">MM/YY</string>
+    <string name="card_cvv_hint">CVV</string>
+    <string name="card_name_hint">Cardholder Name</string>
+    <string name="already_subscribed">You\'re on Pro 🎉</string>
+    <string name="subscription_active">Your subscription is active.</string>
+    <string name="tab_upi">UPI</string>
+    <string name="tab_card">Card</string>
+    <string name="tab_netbanking">Net Banking</string>
+    <string name="feat_full_database">Full drug database</string>
+    <string name="feat_leaf_scan">Unlimited leaf scans</string>
+    <string name="feat_add_medicines">Add medicines</string>
+    <string name="feat_validation">Validation tracking</string>
+    <string name="feat_people">People records</string>
+    <string name="feat_priority">Priority support</string>
+    <string name="section_quick_services">QUICK SERVICES</string>
+    <string name="section_explore">EXPLORE</string>
+    <string name="hero_greeting">Good morning, %1$s</string>
+    <string name="hero_role">Aarogya Mitra · Active</string>
+    <string name="hero_pending_label">Pending</string>
 </resources>
