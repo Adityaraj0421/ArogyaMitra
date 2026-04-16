@@ -52,6 +52,9 @@
             android:name=".LeafPredictionActivity"
             android:exported="false" />
         <activity
+            android:name=".SubscriptionActivity"
+            android:exported="false" />
+        <activity
             android:name=".TransactionsActivity"
             android:exported="false" />
         <activity
