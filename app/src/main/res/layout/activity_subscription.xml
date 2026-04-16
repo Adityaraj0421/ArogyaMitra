@@ -30,30 +30,34 @@
             <!-- Monthly / Annual toggle -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/welcome_card_bg"
+                android:layout_height="48dp"
+                android:background="@drawable/billing_toggle_bg"
                 android:padding="4dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="20dp">
                 <Button
                     android:id="@+id/btnMonthly"
                     style="?attr/materialButtonStyle"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/plan_monthly_price"
-                    android:textSize="11sp"
+                    android:text="Monthly"
+                    android:textSize="12sp"
                     android:backgroundTint="@android:color/transparent"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="@color/text_secondary"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp" />
                 <Button
                     android:id="@+id/btnAnnual"
                     style="?attr/materialButtonStyle"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/plan_annual_price"
-                    android:textSize="11sp"
+                    android:text="Annual  •  Save 37%"
+                    android:textSize="12sp"
                     android:backgroundTint="@color/green_primary"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp" />
             </LinearLayout>
 
             <!-- Plan card -->
@@ -106,18 +110,21 @@
                         android:textSize="10sp"
                         android:layout_marginBottom="16dp" />
 
+                    <!-- Separator -->
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/green_50" android:layout_marginBottom="12dp" />
+
                     <!-- Features 2-column rows -->
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="6dp">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/feat_full_database" android:textSize="10sp" android:drawableStart="@drawable/ic_check_green" android:drawablePadding="6dp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/feat_leaf_scan" android:textSize="10sp" android:drawableStart="@drawable/ic_check_green" android:drawablePadding="6dp" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="10dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="✓  Full drug database" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="✓  Unlimited leaf scans" android:textSize="11sp" android:textColor="@color/text_secondary" />
                     </LinearLayout>
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="6dp">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/feat_add_medicines" android:textSize="10sp" android:drawableStart="@drawable/ic_check_green" android:drawablePadding="6dp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/feat_validation" android:textSize="10sp" android:drawableStart="@drawable/ic_check_green" android:drawablePadding="6dp" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="10dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="✓  Add medicines" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="✓  Validation tracking" android:textSize="11sp" android:textColor="@color/text_secondary" />
                     </LinearLayout>
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/feat_people" android:textSize="10sp" android:drawableStart="@drawable/ic_check_green" android:drawablePadding="6dp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/feat_priority" android:textSize="10sp" android:drawableStart="@drawable/ic_check_green" android:drawablePadding="6dp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="✓  People records" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="✓  Priority support" android:textSize="11sp" android:textColor="@color/text_secondary" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -145,7 +152,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp">
 
             <!-- Payment method tabs -->
             <LinearLayout
@@ -161,10 +171,12 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:text="@string/tab_upi"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:layout_marginEnd="4dp"
                     android:backgroundTint="@color/green_primary"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp" />
                 <Button
                     android:id="@+id/tabCard"
                     style="?attr/materialButtonStyle"
@@ -172,11 +184,13 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:text="@string/tab_card"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:backgroundTint="@android:color/transparent"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="@color/text_secondary"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp" />
                 <Button
                     android:id="@+id/tabNetBanking"
                     style="?attr/materialButtonStyle"
@@ -184,10 +198,12 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:text="@string/tab_netbanking"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:layout_marginStart="4dp"
                     android:backgroundTint="@android:color/transparent"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="@color/text_secondary"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp" />
             </LinearLayout>
 
             <!-- UPI panel -->
@@ -219,10 +235,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="16dp">
-                    <Button android:id="@+id/btnGpay" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="GPay" android:textSize="10sp" android:layout_marginEnd="4dp" />
-                    <Button android:id="@+id/btnPhonepe" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="PhonePe" android:textSize="10sp" android:layout_marginStart="4dp" android:layout_marginEnd="4dp" />
-                    <Button android:id="@+id/btnPaytm" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Paytm" android:textSize="10sp" android:layout_marginStart="4dp" />
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="20dp">
+                    <Button android:id="@+id/btnGpay" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:text="GPay" android:textSize="12sp" android:layout_marginEnd="6dp" android:insetTop="0dp" android:insetBottom="0dp" />
+                    <Button android:id="@+id/btnPhonepe" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:text="PhonePe" android:textSize="12sp" android:layout_marginEnd="6dp" android:insetTop="0dp" android:insetBottom="0dp" />
+                    <Button android:id="@+id/btnPaytm" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:text="Paytm" android:textSize="12sp" android:insetTop="0dp" android:insetBottom="0dp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -297,8 +314,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:text="@string/pay_annual"
-                android:textSize="14sp"
-                android:backgroundTint="@color/green_primary" />
+                android:textSize="15sp"
+                android:backgroundTint="@color/green_primary"
+                android:layout_marginTop="8dp" />
 
             <ProgressBar
                 android:id="@+id/progressPay"

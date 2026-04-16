@@ -115,22 +115,23 @@ public class SubscriptionActivity extends AppCompatActivity {
 
     private void updatePlanToggle(boolean annual) {
         isAnnual = annual;
+        int transparent = android.graphics.Color.TRANSPARENT;
         if (annual) {
             btnAnnual.setBackgroundTintList(getColorStateList(R.color.green_primary));
             btnAnnual.setTextColor(getColor(R.color.white));
             btnMonthly.setBackgroundTintList(
-                    android.content.res.ColorStateList.valueOf(android.graphics.Color.TRANSPARENT));
+                    android.content.res.ColorStateList.valueOf(transparent));
             btnMonthly.setTextColor(getColor(R.color.text_secondary));
-            tvPrice.setText(getString(R.string.plan_annual_price));
+            tvPrice.setText("₹1,499/year");
             tvPriceSub.setText(getString(R.string.plan_per_month_breakdown));
             if (btnPay != null) btnPay.setText(getString(R.string.pay_annual));
         } else {
             btnMonthly.setBackgroundTintList(getColorStateList(R.color.green_primary));
             btnMonthly.setTextColor(getColor(R.color.white));
             btnAnnual.setBackgroundTintList(
-                    android.content.res.ColorStateList.valueOf(android.graphics.Color.TRANSPARENT));
+                    android.content.res.ColorStateList.valueOf(transparent));
             btnAnnual.setTextColor(getColor(R.color.text_secondary));
-            tvPrice.setText(getString(R.string.plan_monthly_price));
+            tvPrice.setText("₹199/month");
             tvPriceSub.setText("Billed monthly · cancel anytime");
             if (btnPay != null) btnPay.setText(getString(R.string.pay_monthly));
         }
