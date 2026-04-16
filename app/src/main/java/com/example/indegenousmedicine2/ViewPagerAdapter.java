@@ -3,7 +3,6 @@ package com.example.indegenousmedicine2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -35,13 +34,16 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         TextView title = view.findViewById(R.id.title);
         TextView description = view.findViewById(R.id.description);
-        ImageView image = view.findViewById(R.id.image);
+        TextView tag = view.findViewById(R.id.featureTagTextView);
 
         ViewPagerItem item = viewPagerItems.get(position);
 
         title.setText(item.getTitle());
         description.setText(item.getDescription());
-        image.setImageResource(item.getImageResId()); // Placeholder image
+        // Tag is optional — set a numbered label for each card
+        if (tag != null) {
+            tag.setText("Feature " + (position + 1));
+        }
 
         container.addView(view);
         return view;

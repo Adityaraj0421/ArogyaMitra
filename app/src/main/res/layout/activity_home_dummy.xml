@@ -1,534 +1,605 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    android:background="@color/green_pale">
 
-    <!-- Header -->
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- ── TOOLBAR ─────────────────────────────────────────────────────── -->
+    <LinearLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="179dp"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/toolbar_gradient_bg"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="28dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:elevation="4dp"
-            android:title="@string/app_name_new">
+            android:background="@android:color/transparent"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <RelativeLayout
+            <!-- Logo row inside Toolbar -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-                <ImageView
-                    android:id="@+id/app_logo"
-                    android:layout_width="64dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:contentDescription="@string/cd_app_logo"
-                    android:src="@drawable/herbal_treatment" />
-
+                <!-- App logo + name -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center_vertical"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="72dp"
-                    android:layout_toStartOf="@+id/language_icon">
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                    <TextView
-                        android:id="@+id/app_name"
+                    <ImageView
+                        android:id="@+id/app_logo"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/logo_final"
+                        android:contentDescription="@string/cd_app_main_logo"
+                        android:background="@drawable/svc_bg_green_shape"
+                        android:padding="4dp" />
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:text="@string/app_name_new"
-                        android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:orientation="vertical"
+                        android:layout_marginStart="10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:text="@string/app_tagline"
-                        android:textColor="#CCFFFFFF"
-                        android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/app_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/app_name_new"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/app_tagline"
+                            android:textColor="@color/svc_bg_green"
+                            android:textSize="9sp" />
+                    </LinearLayout>
                 </LinearLayout>
 
+                <!-- Language + profile icons -->
                 <ImageView
                     android:id="@+id/language_icon"
-                    android:layout_width="55dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="57dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:contentDescription="@string/cd_language_button"
-                    android:src="@drawable/ic_language" />
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_language"
+                    android:background="@drawable/svc_bg_green_shape"
+                    android:padding="6dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/cd_language_icon" />
 
                 <ImageView
                     android:id="@+id/profile_icon"
-                    android:layout_width="56dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="1dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:contentDescription="@string/cd_profile_button"
-                    android:src="@drawable/ic_profile_new" />
-
-            </RelativeLayout>
-
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_profile"
+                    android:background="@drawable/svc_bg_green_shape"
+                    android:padding="6dp"
+                    android:contentDescription="@string/cd_profile_icon" />
+            </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
-        <!-- SearchView -->
+        <!-- Search bar below toolbar row -->
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/search_bar_background"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:paddingEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/search_bg"
             app:iconifiedByDefault="false"
             app:queryHint="@string/search_hint"
-            app:defaultQueryHint="@string/default_search_hint"
-            app:searchHintIcon="@drawable/ic_search" />
+            app:searchIcon="@null" />
+    </LinearLayout>
 
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- Scrollable Body -->
-    <ScrollView
+    <!-- ── SCROLLABLE BODY ───────────────────────────────────────────────── -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/appbar"
-        android:layout_above="@id/footer"
-        android:padding="@dimen/spacing_md"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="14dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Welcome Box -->
-            <LinearLayout
+            <!-- ── HERO CARD ───────────────────────────────────────────── -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/heroCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/welcome_card_bg"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_md"
-                android:layout_marginBottom="@dimen/spacing_md">
+                android:layout_marginTop="-14dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="@dimen/corner_card"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/white">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/welcome_message"
-                    android:gravity="center"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/welcome_text_accent" />
+                    android:orientation="horizontal"
+                    android:padding="14dp"
+                    android:gravity="center_vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_tagline"
-                    android:gravity="center"
-                    android:textSize="13sp"
-                    android:textColor="@color/text_secondary"
-                    android:paddingTop="2dp" />
-            </LinearLayout>
+                    <!-- Avatar -->
+                    <ImageView
+                        android:id="@+id/heroAvatar"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:src="@drawable/ic_user_details"
+                        android:background="@drawable/hero_avatar_bg"
+                        android:padding="8dp"
+                        android:contentDescription="@string/cd_profile_icon" />
 
-            <!-- ViewPager with WormDotsIndicator -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_md">
+                    <!-- Greeting text -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
 
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/viewPager"
-                    android:layout_width="match_parent"
-                    android:layout_height="170dp"
-                    android:layout_alignParentTop="true"/>
+                        <TextView
+                            android:id="@+id/heroName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/app_name_new"
+                            android:textColor="@color/green_dark"
+                            android:textStyle="bold"
+                            android:textSize="13sp" />
 
-                <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
-                    android:id="@+id/dots_indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_below="@id/viewPager"
-                    android:layout_marginTop="6dp"/>
-            </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/hero_role"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="10sp"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
 
-            <!-- Quick Services Header -->
+                    <!-- Pending badge -->
+                    <LinearLayout
+                        android:id="@+id/heroBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/welcome_card_bg"
+                        android:padding="8dp"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:id="@+id/heroPendingCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/green_primary"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/hero_pending_label"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="7sp"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ── QUICK SERVICES ─────────────────────────────────────── -->
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/quick_services"
-                android:textSize="16sp"
+                android:text="@string/section_quick_services"
+                android:textColor="@color/text_secondary"
+                android:textSize="9sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:paddingBottom="12dp"/>
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="10dp" />
 
-            <!-- Quick Services Grid — Row 1 -->
+            <!-- Row 1 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="@dimen/spacing_sm">
+                android:layout_marginBottom="8dp">
 
                 <!-- New User -->
                 <LinearLayout
+                    android:id="@+id/new_user_QS"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="@dimen/spacing_xs">
-
+                    android:background="@drawable/tile_bg"
+                    android:padding="10dp"
+                    android:layout_marginEnd="4dp"
+                    android:clickable="true"
+                    android:focusable="true">
                     <LinearLayout
-                        android:layout_width="@dimen/service_icon_container"
-                        android:layout_height="@dimen/service_icon_container"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
                         android:gravity="center"
-                        android:background="@drawable/svc_bg_blue">
-
+                        android:background="@drawable/svc_bg_green_shape">
                         <ImageView
-                            android:id="@+id/new_user_QS"
-                            android:layout_width="@dimen/service_icon_size"
-                            android:layout_height="@dimen/service_icon_size"
-                            android:contentDescription="@string/cd_new_user_service"
-                            android:src="@drawable/ic_user_details" />
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_user_details"
+                            android:contentDescription="@string/cd_new_user_service" />
                     </LinearLayout>
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/new_user"
-                        android:gravity="center"
-                        android:textSize="@dimen/text_label"
-                        android:paddingTop="6dp"
-                        android:textColor="@android:color/black" />
+                        android:textSize="8sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center" />
                 </LinearLayout>
 
                 <!-- New Drug -->
                 <LinearLayout
+                    android:id="@+id/new_drug_QS"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="@dimen/spacing_xs">
-
+                    android:background="@drawable/tile_bg"
+                    android:padding="10dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:clickable="true"
+                    android:focusable="true">
                     <LinearLayout
-                        android:layout_width="@dimen/service_icon_container"
-                        android:layout_height="@dimen/service_icon_container"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
                         android:gravity="center"
-                        android:background="@drawable/svc_bg_purple">
-
+                        android:background="@drawable/svc_bg_purple_shape">
                         <ImageView
-                            android:id="@+id/new_drug_QS"
-                            android:layout_width="@dimen/service_icon_size"
-                            android:layout_height="@dimen/service_icon_size"
-                            android:contentDescription="@string/cd_new_drug_service"
-                            android:src="@drawable/herbalism" />
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/herbalism"
+                            android:contentDescription="@string/cd_new_drug_service" />
                     </LinearLayout>
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/new_drug"
-                        android:gravity="center"
-                        android:textSize="@dimen/text_label"
-                        android:paddingTop="6dp"
-                        android:textColor="@android:color/black" />
+                        android:textSize="8sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center" />
                 </LinearLayout>
 
                 <!-- Check Status -->
                 <LinearLayout
+                    android:id="@+id/status_icon_QS"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="@dimen/spacing_xs">
-
+                    android:background="@drawable/tile_bg"
+                    android:padding="10dp"
+                    android:layout_marginStart="4dp"
+                    android:clickable="true"
+                    android:focusable="true">
                     <LinearLayout
-                        android:layout_width="@dimen/service_icon_container"
-                        android:layout_height="@dimen/service_icon_container"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
                         android:gravity="center"
-                        android:background="@drawable/svc_bg_amber">
-
+                        android:background="@drawable/svc_bg_amber_shape">
                         <ImageView
-                            android:id="@+id/status_icon_QS"
-                            android:layout_width="@dimen/service_icon_size"
-                            android:layout_height="@dimen/service_icon_size"
-                            android:contentDescription="@string/cd_check_status_service"
-                            android:src="@drawable/ic_status" />
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_status"
+                            android:contentDescription="@string/cd_check_status_service" />
                     </LinearLayout>
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/check_status"
-                        android:gravity="center"
-                        android:textSize="@dimen/text_label"
-                        android:paddingTop="6dp"
-                        android:textColor="@android:color/black" />
+                        android:textSize="8sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center" />
                 </LinearLayout>
-
             </LinearLayout>
 
-            <!-- Quick Services Grid — Row 2 -->
+            <!-- Row 2 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="@dimen/spacing_md">
+                android:layout_marginBottom="16dp">
 
                 <!-- Drug List -->
                 <LinearLayout
+                    android:id="@+id/drug_list_QS"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="@dimen/spacing_xs">
-
+                    android:background="@drawable/tile_bg"
+                    android:padding="10dp"
+                    android:layout_marginEnd="4dp"
+                    android:clickable="true"
+                    android:focusable="true">
                     <LinearLayout
-                        android:layout_width="@dimen/service_icon_container"
-                        android:layout_height="@dimen/service_icon_container"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
                         android:gravity="center"
-                        android:background="@drawable/svc_bg_green">
-
+                        android:background="@drawable/svc_bg_teal_shape">
                         <ImageView
-                            android:id="@+id/drug_list_QS"
-                            android:layout_width="@dimen/service_icon_size"
-                            android:layout_height="@dimen/service_icon_size"
-                            android:contentDescription="@string/cd_drug_list_service"
-                            android:src="@drawable/ic_medicine_list" />
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/list"
+                            android:contentDescription="@string/cd_drug_list_service" />
                     </LinearLayout>
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/drug_list"
-                        android:gravity="center"
-                        android:textSize="@dimen/text_label"
-                        android:paddingTop="6dp"
-                        android:textColor="@android:color/black" />
+                        android:textSize="8sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center" />
                 </LinearLayout>
 
                 <!-- List of Plants -->
                 <LinearLayout
+                    android:id="@+id/list_of_plants_QS"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="@dimen/spacing_xs">
-
+                    android:background="@drawable/tile_bg"
+                    android:padding="10dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:clickable="true"
+                    android:focusable="true">
                     <LinearLayout
-                        android:layout_width="@dimen/service_icon_container"
-                        android:layout_height="@dimen/service_icon_container"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
                         android:gravity="center"
-                        android:background="@drawable/svc_bg_pink">
-
+                        android:background="@drawable/svc_bg_pink_shape">
                         <ImageView
-                            android:id="@+id/list_of_plants_QS"
-                            android:layout_width="@dimen/service_icon_size"
-                            android:layout_height="@dimen/service_icon_size"
-                            android:contentDescription="@string/cd_plants_list_service"
-                            android:src="@drawable/ic_plants_list" />
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_plants_list"
+                            android:contentDescription="@string/cd_plants_list_service" />
                     </LinearLayout>
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/list_of_plants"
-                        android:gravity="center"
-                        android:textSize="@dimen/text_label"
-                        android:paddingTop="6dp"
-                        android:textColor="@android:color/black" />
+                        android:textSize="8sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center" />
                 </LinearLayout>
 
-                <!-- Identify Leaf -->
+                <!-- Identify Leaf (accent tile) -->
                 <LinearLayout
+                    android:id="@+id/identify_leaf_QS"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="@dimen/spacing_xs">
-
+                    android:background="@drawable/tile_accent_bg"
+                    android:padding="10dp"
+                    android:layout_marginStart="4dp"
+                    android:clickable="true"
+                    android:focusable="true">
                     <LinearLayout
-                        android:layout_width="@dimen/service_icon_container"
-                        android:layout_height="@dimen/service_icon_container"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
                         android:gravity="center"
-                        android:background="@drawable/svc_bg_teal">
-
+                        android:background="@drawable/svc_bg_white_alpha">
                         <ImageView
-                            android:id="@+id/identify_leaf_QS"
-                            android:layout_width="@dimen/service_icon_size"
-                            android:layout_height="@dimen/service_icon_size"
-                            android:contentDescription="@string/cd_identify_leaf_service"
-                            android:src="@drawable/herbal_treatment" />
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/herbal_treatment"
+                            android:contentDescription="@string/cd_identify_leaf_service" />
                     </LinearLayout>
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/identify_leaf"
-                        android:gravity="center"
-                        android:textSize="@dimen/text_label"
-                        android:paddingTop="6dp"
-                        android:textColor="@android:color/black" />
+                        android:textSize="8sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center" />
                 </LinearLayout>
-
             </LinearLayout>
 
+            <!-- ── EXPLORE CAROUSEL ───────────────────────────────────── -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/section_explore"
+                android:textColor="@color/text_secondary"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="10dp" />
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_marginBottom="8dp" />
+
+            <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
+                android:id="@+id/dots_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                app:dotsColor="@color/green_primary"
+                app:selectedDotColor="@color/green_primary" />
+
         </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-    </ScrollView>
-
-    <!-- Footer -->
+    <!-- ── FOOTER NAV ────────────────────────────────────────────────────── -->
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
-        android:elevation="4dp">
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
             android:orientation="vertical"
+            android:gravity="center"
             android:minHeight="@dimen/touch_target_min"
-            android:padding="@dimen/spacing_xs">
-
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:id="@+id/users_list_icon"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/footer_icon_height"
                 android:layout_height="@dimen/footer_icon_height"
-                android:contentDescription="@string/cd_users_list_nav"
-                android:src="@drawable/ic_users_list"/>
-
+                android:src="@drawable/ic_users_list"
+                android:contentDescription="@string/cd_users_list_footer" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/users"/>
-
+                android:text="@string/users"
+                android:textSize="@dimen/text_label"
+                android:textColor="@color/text_secondary" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
             android:orientation="vertical"
+            android:gravity="center"
             android:minHeight="@dimen/touch_target_min"
-            android:padding="@dimen/spacing_xs">
-
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:id="@+id/add_drug_icon"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/footer_icon_height"
                 android:layout_height="@dimen/footer_icon_height"
-                android:contentDescription="@string/cd_add_drug_nav"
-                android:src="@drawable/ic_add_drug"/>
-
+                android:src="@drawable/herbalism"
+                android:contentDescription="@string/cd_add_drug_footer" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/add_drug"/>
-
+                android:text="@string/add_drug"
+                android:textSize="@dimen/text_label"
+                android:textColor="@color/text_secondary" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
             android:orientation="vertical"
+            android:gravity="center"
             android:minHeight="@dimen/touch_target_min"
-            android:padding="@dimen/spacing_xs">
-
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:id="@+id/status_icon"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/footer_icon_height"
                 android:layout_height="@dimen/footer_icon_height"
-                android:contentDescription="@string/cd_status_nav"
-                android:src="@drawable/ic_status"/>
-
+                android:src="@drawable/ic_status"
+                android:contentDescription="@string/cd_status_footer" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/status"/>
-
+                android:text="@string/status"
+                android:textSize="@dimen/text_label"
+                android:textColor="@color/text_secondary" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
             android:orientation="vertical"
+            android:gravity="center"
             android:minHeight="@dimen/touch_target_min"
-            android:padding="@dimen/spacing_xs">
-
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:id="@+id/newsletter_icon"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/footer_icon_height"
                 android:layout_height="@dimen/footer_icon_height"
-                android:contentDescription="@string/cd_newsletter_nav"
-                android:src="@drawable/ic_documents"/>
-
+                android:src="@drawable/ic_documents"
+                android:contentDescription="@string/cd_newsletter_footer" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/newsletter"/>
-
+                android:text="@string/newsletter"
+                android:textSize="@dimen/text_label"
+                android:textColor="@color/text_secondary" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
             android:orientation="vertical"
+            android:gravity="center"
             android:minHeight="@dimen/touch_target_min"
-            android:padding="@dimen/spacing_xs">
-
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:id="@+id/transations_icon"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/footer_icon_height"
                 android:layout_height="@dimen/footer_icon_height"
-                android:contentDescription="@string/cd_transactions_nav"
-                android:src="@drawable/ic_transaction"/>
-
+                android:src="@drawable/ic_transaction"
+                android:contentDescription="@string/cd_transactions_footer" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/transactions"
-                android:gravity="center"/>
-
+                android:textSize="@dimen/text_label"
+                android:textColor="@color/text_secondary" />
         </LinearLayout>
-
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
