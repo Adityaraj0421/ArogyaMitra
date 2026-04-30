@@ -10,7 +10,6 @@ import org.json.JSONArray;
 import org.tensorflow.lite.Interpreter;
 
 import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,79 +22,90 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class LeafClassifier implements Closeable {
-    private static final String MODEL_FILE = "leaf_classifier.tflite";
-    private static final String LABELS_FILE = "labels.json";
-    private static final int IMAGE_SIZE = 150;
-    private static final int PIXEL_SIZE = 3;
+/**
+ * Offline leaf classifier backed by a TFLite MobileNet model.
+ * Implements LeafIdentifier so it can be hot-swapped with GeminiLeafIdentifier.
+ *
+ * Model input : 150×150 RGB float32 normalised to [0, 1]
+ * Model output: float[1][numLabels] softmax confidence scores
+ */
+public class LeafClassifier implements LeafIdentifier {
 
-    private final Interpreter interpreter;
+    private static final String MODEL_FILE  = "leaf_classifier.tflite";
+    private static final String LABELS_FILE = "labels.json";
+    private static final int    IMAGE_SIZE  = 150;
+    private static final int    PIXEL_SIZE  = 3;   // R, G, B channels
+
+    private final Interpreter  interpreter;
     private final List<String> labels;
 
     public LeafClassifier(@NonNull Context context) throws IOException {
-        Interpreter.Options options = new Interpreter.Options();
-        options.setNumThreads(4);
-        interpreter = new Interpreter(loadModelFile(context), options);
-        labels = loadLabels(context);
+        Interpreter.Options opts = new Interpreter.Options();
+        opts.setNumThreads(4);
+        interpreter = new Interpreter(loadModelFile(context), opts);
+        labels      = loadLabels(context);
     }
 
-    public PredictionResult predict(@NonNull Bitmap bitmap) {
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, IMAGE_SIZE, IMAGE_SIZE, true);
-        ByteBuffer inputBuffer = ByteBuffer.allocateDirect(4 * IMAGE_SIZE * IMAGE_SIZE * PIXEL_SIZE)
+    @Override
+    public PredictionResult identify(@NonNull Bitmap bitmap) throws IOException {
+        // Scale to model's expected input size
+        Bitmap scaled = Bitmap.createScaledBitmap(bitmap, IMAGE_SIZE, IMAGE_SIZE, true);
+
+        // Pack pixels into a float ByteBuffer, normalising each channel to [0, 1]
+        ByteBuffer inputBuffer = ByteBuffer
+                .allocateDirect(4 * IMAGE_SIZE * IMAGE_SIZE * PIXEL_SIZE)
                 .order(ByteOrder.nativeOrder());
 
         int[] pixels = new int[IMAGE_SIZE * IMAGE_SIZE];
-        scaledBitmap.getPixels(pixels, 0, IMAGE_SIZE, 0, 0, IMAGE_SIZE, IMAGE_SIZE);
-
+        scaled.getPixels(pixels, 0, IMAGE_SIZE, 0, 0, IMAGE_SIZE, IMAGE_SIZE);
         for (int pixel : pixels) {
-            inputBuffer.putFloat(((pixel >> 16) & 0xFF) / 255f);
-            inputBuffer.putFloat(((pixel >> 8) & 0xFF) / 255f);
-            inputBuffer.putFloat((pixel & 0xFF) / 255f);
+            inputBuffer.putFloat(((pixel >> 16) & 0xFF) / 255f);   // R
+            inputBuffer.putFloat(((pixel >> 8)  & 0xFF) / 255f);   // G
+            inputBuffer.putFloat(( pixel        & 0xFF) / 255f);   // B
         }
         inputBuffer.rewind();
 
+        // Run inference
         float[][] output = new float[1][labels.size()];
         interpreter.run(inputBuffer, output);
 
-        int bestIndex = 0;
+        // Argmax — pick the class with highest confidence
+        int   bestIndex = 0;
         float bestScore = output[0][0];
-        for (int index = 1; index < output[0].length; index++) {
-            if (output[0][index] > bestScore) {
-                bestScore = output[0][index];
-                bestIndex = index;
+        for (int i = 1; i < output[0].length; i++) {
+            if (output[0][i] > bestScore) {
+                bestScore = output[0][i];
+                bestIndex = i;
             }
         }
 
         return new PredictionResult(labels.get(bestIndex), bestScore);
     }
 
-    private MappedByteBuffer loadModelFile(Context context) throws IOException {
-        try (AssetFileDescriptor fileDescriptor = context.getAssets().openFd(MODEL_FILE);
-             FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
-             FileChannel fileChannel = inputStream.getChannel()) {
-            return fileChannel.map(FileChannel.MapMode.READ_ONLY,
-                    fileDescriptor.getStartOffset(),
-                    fileDescriptor.getDeclaredLength());
+    // ── Resource loading ──────────────────────────────────────────────────────
+
+    private MappedByteBuffer loadModelFile(@NonNull Context context) throws IOException {
+        try (AssetFileDescriptor fd  = context.getAssets().openFd(MODEL_FILE);
+             FileInputStream    fis = new FileInputStream(fd.getFileDescriptor());
+             FileChannel        fc  = fis.getChannel()) {
+            return fc.map(FileChannel.MapMode.READ_ONLY, fd.getStartOffset(), fd.getDeclaredLength());
         }
     }
 
-    private List<String> loadLabels(Context context) throws IOException {
-        try (InputStream inputStream = context.getAssets().open(LABELS_FILE);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            StringBuilder builder = new StringBuilder();
+    private List<String> loadLabels(@NonNull Context context) throws IOException {
+        try (InputStream     is = context.getAssets().open(LABELS_FILE);
+             BufferedReader  br = new BufferedReader(new InputStreamReader(is))) {
+            StringBuilder sb = new StringBuilder();
             String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
+            while ((line = br.readLine()) != null) sb.append(line);
 
-            JSONArray jsonArray = new JSONArray(builder.toString());
-            List<String> loadedLabels = new ArrayList<>(jsonArray.length());
-            for (int index = 0; index < jsonArray.length(); index++) {
-                loadedLabels.add(jsonArray.getString(index));
-            }
-            return loadedLabels;
+            JSONArray arr    = new JSONArray(sb.toString());
+            List<String> lst = new ArrayList<>(arr.length());
+            for (int i = 0; i < arr.length(); i++) lst.add(arr.getString(i));
+            return lst;
         } catch (Exception e) {
-            throw new IOException(String.format(Locale.US, "Failed to parse %s", LABELS_FILE), e);
+            throw new IOException(
+                    String.format(Locale.US, "Failed to parse %s", LABELS_FILE), e);
         }
     }
 

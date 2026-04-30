@@ -44,7 +44,7 @@ public class HomeActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Agroषधि");
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        toolbar.setLogo(R.drawable.logo_final);
+        toolbar.setLogo(R.drawable.ic_launcher_foreground);
         ViewGroup.LayoutParams lp = toolbar.getLayoutParams();
         if (lp instanceof Toolbar.LayoutParams) {
             ((Toolbar.LayoutParams) lp).gravity = android.view.Gravity.START;

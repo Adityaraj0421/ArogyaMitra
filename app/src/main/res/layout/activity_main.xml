@@ -34,7 +34,10 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:contentDescription="@string/cd_app_main_logo"
-        android:src="@drawable/app_logo"
+        android:src="@drawable/ic_launcher_foreground"
+        android:background="@drawable/ic_launcher_background"
+        android:padding="12dp"
+        android:clipToOutline="true"
         android:layout_below="@id/titleTextView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp" />

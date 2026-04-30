@@ -1,39 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+  Splash screen — Arogya Mitra
+  HelloActivity reads: R.id.tagline (required — do not remove)
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:gravity="center">
+    android:background="@drawable/splash_bg">
 
-    <!-- App Logo -->
-    <ImageView
-        android:id="@+id/app_logo"
-        android:layout_width="149dp"
-        android:layout_height="62dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:src="@drawable/logo_final" />
+    <!-- ── DECORATIVE BACKGROUND CIRCLES ──────────────── -->
+    <View
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="-110dp"
+        android:layout_marginEnd="-110dp"
+        android:background="@drawable/splash_circle_bg" />
 
-    <!-- Tagline -->
-    <TextView
-        android:id="@+id/tagline"
+    <View
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginBottom="-60dp"
+        android:layout_marginStart="-60dp"
+        android:background="@drawable/splash_circle_bg" />
+
+    <View
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="-140dp"
+        android:background="@drawable/splash_circle_bg" />
+
+    <View
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_vertical|start"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="120dp"
+        android:background="@drawable/splash_circle_bg" />
+
+    <!-- ── CENTRE CONTENT ────────────────────────────── -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Agroषधि : Towards Ethnic उपचार"
-        android:textSize="18sp"
-        android:textColor="#333333"
-        android:layout_below="@id/app_logo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"/>
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <!-- Footer Image -->
-    <ImageView
-        android:id="@+id/footer_image"
-        android:layout_width="405dp"
-        android:layout_height="72dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="1dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/base_final" />
+        <!-- Outer ring -->
+        <FrameLayout
+            android:layout_width="148dp"
+            android:layout_height="148dp"
+            android:layout_gravity="center"
+            android:background="@drawable/splash_icon_ring">
 
-</RelativeLayout>
+            <!-- Inner icon container -->
+            <FrameLayout
+                android:layout_width="118dp"
+                android:layout_height="118dp"
+                android:layout_gravity="center"
+                android:background="@drawable/splash_icon_bg">
+
+                <ImageView
+                    android:id="@+id/app_logo"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_launcher_foreground"
+                    android:contentDescription="@string/app_name_new" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <!-- App name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/app_name_new"
+            android:textColor="#FFFFFF"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:letterSpacing="-0.01"
+            android:fontFamily="sans-serif-medium" />
+
+        <!-- Accent divider -->
+        <View
+            android:layout_width="48dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="14dp"
+            android:background="#50B9F6CA" />
+
+        <!-- Tagline — ID required by HelloActivity.java -->
+        <TextView
+            android:id="@+id/tagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="Indigenous Wisdom · Modern Science"
+            android:textColor="#B9F6CA"
+            android:textSize="13sp"
+            android:letterSpacing="0.04"
+            android:fontFamily="sans-serif-light" />
+
+    </LinearLayout>
+
+    <!-- ── BOTTOM BRANDING ───────────────────────────── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="52dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="#60FFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="INDIGENOUS MEDICINE PLATFORM"
+            android:textColor="#55FFFFFF"
+            android:textSize="10sp"
+            android:letterSpacing="0.12"
+            android:textAllCaps="true" />
+
+    </LinearLayout>
+
+</FrameLayout>

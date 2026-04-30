@@ -1,7 +1,14 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
 }
+
+// Read API keys from local.properties (never committed to git)
+val localProps = Properties()
+val localPropsFile = rootProject.file("local.properties")
+if (localPropsFile.exists()) localProps.load(localPropsFile.inputStream())
 
 android {
     namespace = "com.example.indegenousmedicine2"
@@ -15,6 +22,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "GEMINI_API_KEY",
+            "\"${localProps.getProperty("GEMINI_API_KEY", "")}\"")
+        buildConfigField("String", "OPENROUTER_API_KEY",
+            "\"${localProps.getProperty("OPENROUTER_API_KEY", "")}\"")
     }
 
     buildTypes {
@@ -33,14 +45,12 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
-    androidResources {
-        noCompress += "tflite"
-    }
+    androidResources { noCompress += "tflite" }
 }
 
 dependencies {
-
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.navigation:navigation-fragment:2.6.0")
@@ -51,17 +61,18 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-analytics")
-    implementation ("com.google.firebase:firebase-auth:22.3.1")
-    implementation ("com.google.firebase:firebase-database:20.3.1")
+    implementation("com.google.firebase:firebase-auth:22.3.1")
+    implementation("com.google.firebase:firebase-database:20.3.1")
     implementation("com.google.android.gms:play-services-auth:20.0.1")
-    implementation ("com.firebaseui:firebase-ui-auth:7.2.0")
-    implementation ("com.google.firebase:firebase-storage:20.3.0")
+    implementation("com.firebaseui:firebase-ui-auth:7.2.0")
+    implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
-//    implementation("com.tbuonomo.andrui:viewpagerdotsindicator:4.2.0")
-    implementation ("com.google.android.material:material:1.12.0")
-    implementation ("me.relex:circleindicator:2.1.6")
-    implementation ("com.tbuonomo:dotsindicator:4.2")
-    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("me.relex:circleindicator:2.1.6")
+    implementation("com.tbuonomo:dotsindicator:4.2")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    // TFLite — offline leaf classification model
     implementation("org.tensorflow:tensorflow-lite:2.16.1")
     implementation("org.tensorflow:tensorflow-lite-select-tf-ops:2.16.1")
 }

@@ -14,7 +14,10 @@
         android:layout_width="124dp"
         android:layout_height="124dp"
         android:layout_marginBottom="24dp"
-        android:src="@drawable/ic_login_icon"
+        android:src="@drawable/ic_launcher_foreground"
+        android:background="@drawable/ic_launcher_background"
+        android:padding="12dp"
+        android:clipToOutline="true"
         android:elevation="8dp"
         android:transitionName="logoTransition"/>
 

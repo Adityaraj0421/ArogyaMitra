@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dashed rounded border for the empty leaf scan area -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#F0F7EE" />
+    <stroke
+        android:width="2dp"
+        android:color="#81C784"
+        android:dashWidth="8dp"
+        android:dashGap="6dp" />
+    <corners android:radius="20dp" />
+</shape>

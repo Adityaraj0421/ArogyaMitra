@@ -1,36 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Leaf Prediction Screen — Arogya Mitra
+  IDs that LeafPredictionActivity reads (do not rename):
+    toolbar, captureButton, selectButton, previewImageView,
+    progressBar, statusTextView, predictionValueTextView,
+    confidenceValueTextView, searchDrugButton
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F3EA"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#F4F9F4">
 
+    <!-- ── TOOLBAR ─────────────────────────────────────── -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/green_primary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:paddingHorizontal="20dp"
+            android:paddingTop="24dp">
+
+            <!-- ── HERO HEADER ─────────────────────────── -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Identify a Plant"
+                android:textColor="#1A3A1A"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="@string/leaf_prediction_subtitle"
-                android:textColor="#3F3A34"
-                android:textSize="16sp" />
+                android:textColor="#6B7280"
+                android:textSize="14sp"
+                android:lineSpacingExtra="2dp" />
 
+            <!-- ── MODEL TOGGLE ───────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/toggle_track_bg"
+                android:orientation="horizontal"
+                android:padding="3dp">
+
+                <Button
+                    android:id="@+id/btnGemini"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/toggle_selected_bg"
+                    android:stateListAnimator="@null"
+                    android:text="🤖  Gemini AI"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp" />
+
+                <Button
+                    android:id="@+id/btnOfflineML"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:stateListAnimator="@null"
+                    android:text="🌿  Offline ML"
+                    android:textColor="@color/green_medium"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp" />
+
+            </LinearLayout>
+
+            <!-- ── SCAN BUTTONS ────────────────────────── -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,110 +103,201 @@
                 <Button
                     android:id="@+id/captureButton"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:text="@string/capture_image" />
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/btn_pill_primary"
+                    android:stateListAnimator="@null"
+                    android:text="📷  Camera"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp" />
 
                 <Button
                     android:id="@+id/selectButton"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:text="@string/select_image" />
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/btn_pill_outline"
+                    android:stateListAnimator="@null"
+                    android:text="🖼  Gallery"
+                    android:textColor="@color/green_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp" />
+
             </LinearLayout>
 
+            <!-- ── IMAGE PREVIEW ──────────────────────── -->
             <ImageView
                 android:id="@+id/previewImageView"
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
                 android:layout_marginTop="20dp"
-                android:adjustViewBounds="true"
-                android:background="#E6DDD1"
+                android:background="@drawable/leaf_scan_placeholder"
                 android:contentDescription="@string/photograph"
                 android:scaleType="centerCrop"
-                android:src="@drawable/herbal_treatment" />
+                android:src="@drawable/herbal_treatment"
+                android:clipToOutline="true" />
 
+            <!-- ── PROGRESS / STATUS ──────────────────── -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
+                android:indeterminateTint="@color/green_primary"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/statusTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_horizontal"
-                android:textColor="#6C6257"
-                android:textSize="14sp" />
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:textColor="#6B7280"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-light" />
 
+            <!-- ── RESULT CARD ─────────────────────────── -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:cardBackgroundColor="#FFFDF8"
-                app:cardCornerRadius="18dp"
-                app:cardElevation="2dp"
-                app:strokeColor="#DCCFBF"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="3dp"
+                app:strokeColor="#C8E6C9"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="22dp">
 
+                    <!-- Card header row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="22dp"
+                            android:background="@color/green_primary"
+                            android:layout_marginEnd="10dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="AI Analysis Result"
+                            android:textColor="#1A3A1A"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.02" />
+
+                    </LinearLayout>
+
+                    <!-- Identified plant label -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/prediction_label"
-                        android:textColor="#6C6257"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:textColor="#6B7280"
+                        android:textSize="11sp"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.08" />
 
                     <TextView
                         android:id="@+id/predictionValueTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="6dp"
                         android:text="@string/prediction_placeholder"
-                        android:textColor="#1F1A15"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
+                        android:textColor="#1A3A1A"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:lineSpacingExtra="3dp" />
 
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="16dp"
+                        android:background="#EEF0ED" />
+
+                    <!-- Confidence label -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
                         android:text="@string/confidence_label"
-                        android:textColor="#6C6257"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:textColor="#6B7280"
+                        android:textSize="11sp"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.08" />
 
-                    <TextView
-                        android:id="@+id/confidenceValueTextView"
+                    <!-- Confidence row: big number + chip -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/confidence_placeholder"
-                        android:textColor="#1F1A15"
-                        android:textSize="18sp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="6dp">
+
+                        <TextView
+                            android:id="@+id/confidenceValueTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/confidence_placeholder"
+                            android:textColor="#2E7D32"
+                            android:textSize="32sp"
+                            android:textStyle="bold" />
+
+                        <!-- Active model badge — text updated at runtime -->
+                        <TextView
+                            android:id="@+id/modelBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/green_chip_bg"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="4dp"
+                            android:text="Gemini AI"
+                            android:textColor="#2E7D32"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.04" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- ── SEARCH DRUG BUTTON ─────────────────── -->
             <Button
                 android:id="@+id/searchDrugButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:layout_marginTop="16dp"
+                android:background="@drawable/btn_pill_primary"
+                android:stateListAnimator="@null"
                 android:text="@string/search_drug_records"
-                android:visibility="gone" />
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

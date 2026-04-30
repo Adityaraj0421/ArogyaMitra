@@ -3,15 +3,34 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Theme aliases expected by older layouts and drawables -->
+    <!-- ── Nature green palette ──────────────────────── -->
+    <color name="green_darkest">#0D2B0D</color>    <!-- splash bg start -->
+    <color name="green_dark">#1B5E20</color>        <!-- icon bg, headers -->
+    <color name="green_primary">#2E7D32</color>     <!-- primary brand -->
+    <color name="green_medium">#388E3C</color>
+    <color name="green_600">#43A047</color>
+    <color name="green_light">#66BB6A</color>
+    <color name="green_200">#A5D6A7</color>
+    <color name="green_100">#C8E6C9</color>
+    <color name="green_50">#E8F5E9</color>
+    <color name="green_pale">#F4F9F4</color>        <!-- screen background -->
+
+    <!-- ── Surface & text ───────────────────────────── -->
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#F4F9F4</color>
+    <color name="on_surface">#1A3A1A</color>         <!-- dark green-tinted text -->
+    <color name="text_secondary">#6B7280</color>
+    <color name="divider">#EEF0ED</color>
+    <color name="background_color">#F4F9F4</color>
+
+    <!-- ── Legacy aliases (used by older layouts) ───── -->
     <color name="colorPrimary">#2E7D32</color>
     <color name="colorPrimaryDark">#1B5E20</color>
-    <color name="button_background">#FF4081</color> <!-- Vibrant pink color -->
-    <color name="button_text">#FFFFFF</color> <!-- White text color -->
-    <color name="background_color">#F5F5F5</color>
+    <color name="button_background">#2E7D32</color>
+    <color name="button_text">#FFFFFF</color>
     <color name="google_button_color">#4285F4</color>
 
-    <!-- Service card pastel backgrounds (Material 100-shade) -->
+    <!-- ── Service card pastel backgrounds ──────────── -->
     <color name="svc_bg_blue">#BBDEFB</color>
     <color name="svc_bg_purple">#E1BEE7</color>
     <color name="svc_bg_amber">#FFECB3</color>
@@ -19,19 +38,8 @@
     <color name="svc_bg_pink">#F8BBD9</color>
     <color name="svc_bg_teal">#B2EBF2</color>
 
-    <!-- Fresh Nature green palette -->
-    <color name="green_dark">#1B5E20</color>
-    <color name="green_primary">#2E7D32</color>
-    <color name="green_medium">#388E3C</color>
-    <color name="green_light">#66BB6A</color>
-    <color name="green_50">#E8F5E9</color>
-    <color name="green_pale">#F1F8E9</color>
-
-    <!-- Welcome card accent -->
+    <!-- ── Welcome / hero card ──────────────────────── -->
     <color name="welcome_card_bg">#E8F5E9</color>
     <color name="welcome_card_border">#A5D6A7</color>
     <color name="welcome_text_accent">#2E7D32</color>
-
-    <!-- Section header -->
-    <color name="text_secondary">#757575</color>
 </resources>

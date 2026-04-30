@@ -45,7 +45,7 @@
                         android:id="@+id/app_logo"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/logo_final"
+                        android:src="@drawable/ic_launcher_foreground"
                         android:contentDescription="@string/cd_app_main_logo"
                         android:background="@drawable/svc_bg_green_shape"
                         android:padding="4dp" />
