@@ -42,7 +42,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         description.setText(item.getDescription());
         // Tag is optional — set a numbered label for each card
         if (tag != null) {
-            tag.setText("Feature " + (position + 1));
+            tag.setText(tag.getContext().getString(R.string.feature_tag, position + 1));
         }
 
         container.addView(view);

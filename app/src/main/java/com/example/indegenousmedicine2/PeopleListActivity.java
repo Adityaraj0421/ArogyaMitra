@@ -25,6 +25,11 @@ import java.util.List;
 
 public class PeopleListActivity extends AppCompatActivity {
 
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LanguageManager.wrap(newBase));
+    }
+
     private RecyclerView recyclerViewPeople;
     private android.widget.TextView textViewEmpty;
     private PeopleAdapter peopleAdapter;

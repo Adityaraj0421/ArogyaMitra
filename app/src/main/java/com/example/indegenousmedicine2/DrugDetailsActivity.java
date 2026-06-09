@@ -27,6 +27,11 @@ import java.util.List;
 
 public class DrugDetailsActivity extends AppCompatActivity {
 
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LanguageManager.wrap(newBase));
+    }
+
     private TextView textViewAarogyaMitra, textViewDrugName, textViewHowToApply, textViewIsViable, textViewMedicinalPlants, textViewModeOfPreparation, textViewScientificName, textViewYearsUsedSince;
     private RecyclerView recyclerViewImages;
     private ImageAdapter imageAdapter;

@@ -48,8 +48,11 @@ public class LeafClassifier implements LeafIdentifier {
 
     @Override
     public PredictionResult identify(@NonNull Bitmap bitmap) throws IOException {
-        // Scale to model's expected input size
-        Bitmap scaled = Bitmap.createScaledBitmap(bitmap, IMAGE_SIZE, IMAGE_SIZE, true);
+        // Centre-crop to a square first, THEN scale. The model was trained on
+        // square single-leaf images; scaling a non-square photo straight to
+        // 150×150 stretches the leaf and badly degrades accuracy.
+        Bitmap square = centerCropSquare(bitmap);
+        Bitmap scaled = Bitmap.createScaledBitmap(square, IMAGE_SIZE, IMAGE_SIZE, true);
 
         // Pack pixels into a float ByteBuffer, normalising each channel to [0, 1]
         ByteBuffer inputBuffer = ByteBuffer
@@ -80,6 +83,17 @@ public class LeafClassifier implements LeafIdentifier {
         }
 
         return new PredictionResult(labels.get(bestIndex), bestScore);
+    }
+
+    /** Crops the largest centred square out of the bitmap (no distortion). */
+    private static Bitmap centerCropSquare(@NonNull Bitmap src) {
+        int w = src.getWidth();
+        int h = src.getHeight();
+        int side = Math.min(w, h);
+        int x = (w - side) / 2;
+        int y = (h - side) / 2;
+        if (x == 0 && y == 0 && w == h) return src;
+        return Bitmap.createBitmap(src, x, y, side, side);
     }
 
     // ── Resource loading ──────────────────────────────────────────────────────

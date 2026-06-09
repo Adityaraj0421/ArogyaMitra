@@ -158,25 +158,9 @@ public class OpenRouterLeafIdentifier implements LeafIdentifier {
             String text = message.isNull("content")
                     ? message.optString("reasoning", "")
                     : message.getString("content");
-            text = text.trim();
 
-            String plant      = "Unknown";
-            float  confidence = 0f;
-
-            for (String line : text.split("\n")) {
-                line = line.trim();
-                if (line.startsWith("PLANT:")) {
-                    plant = line.substring("PLANT:".length()).trim();
-                } else if (line.startsWith("CONFIDENCE:")) {
-                    try {
-                        int pct = Integer.parseInt(
-                                line.substring("CONFIDENCE:".length()).trim());
-                        confidence = pct / 100f;
-                    } catch (NumberFormatException ignored) {}
-                }
-            }
-
-            return new PredictionResult(plant, confidence);
+            // Robustly handles one-line, multi-line, or prose replies.
+            return PredictionResult.fromAiText(text);
         } catch (Exception e) {
             throw new IOException("Failed to parse OpenRouter response: " + jsonString, e);
         }

@@ -28,6 +28,11 @@ import java.util.concurrent.Executors;
 
 public class LeafPredictionActivity extends AppCompatActivity {
 
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LanguageManager.wrap(newBase));
+    }
+
     private static final String PREFS_NAME    = "leaf_prediction_prefs";
     private static final String PREF_USE_GEMINI = "use_gemini";
 
@@ -214,10 +219,17 @@ public class LeafPredictionActivity extends AppCompatActivity {
                 PredictionResult result = identifier.identify(bitmap);
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
-                    statusTextView.setText("");
                     predictionTextView.setText(result.getLabel());
                     confidenceTextView.setText(
                             String.format(Locale.US, "%.0f%%", result.getConfidence() * 100f));
+                    // The offline model is small and can be unsure on real-world
+                    // photos — be honest about it instead of showing a confident
+                    // wrong guess.
+                    if (!useGemini && result.getConfidence() < 0.5f) {
+                        statusTextView.setText(R.string.low_confidence_hint);
+                    } else {
+                        statusTextView.setText("");
+                    }
                     lastPredictedLabel = result.getLabel();
                     searchDrugButton.setVisibility(View.VISIBLE);
                 });

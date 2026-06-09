@@ -1,0 +1,14 @@
+{
+  "name": "arogya-mitra-seed",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One-shot importer that seeds 200+ medicinal plants into the Arogya Mitra Firebase RTDB with correct, species-matched images.",
+  "type": "commonjs",
+  "scripts": {
+    "dry-run": "node import_seed.js --dry-run",
+    "import": "node import_seed.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}

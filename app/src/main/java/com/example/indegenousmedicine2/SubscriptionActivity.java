@@ -25,6 +25,11 @@ import java.util.UUID;
 
 public class SubscriptionActivity extends AppCompatActivity {
 
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LanguageManager.wrap(newBase));
+    }
+
     private static final String PREFS_NAME = "agro_prefs";
     private static final String KEY_SUBSCRIBED = "is_subscribed";
 

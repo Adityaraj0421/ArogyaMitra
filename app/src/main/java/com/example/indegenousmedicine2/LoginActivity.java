@@ -147,6 +147,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LanguageManager.wrap(newBase));
+    }
+
     private static final int RC_SIGN_IN = 123;
     private static final String PREFS_NAME = "MyPrefsFile";
     private static final String IS_LOGGED_IN_KEY = "isLoggedIn";

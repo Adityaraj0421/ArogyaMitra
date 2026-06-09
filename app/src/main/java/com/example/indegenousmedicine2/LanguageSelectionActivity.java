@@ -15,6 +15,11 @@ import android.widget.TextView;
 
 public class LanguageSelectionActivity extends AppCompatActivity {
 
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LanguageManager.wrap(newBase));
+    }
+
     private TextView textLanguageSelection;
     private RadioGroup radioGroupLanguage;
     private RadioButton radioEnglish, radioAssamese;

@@ -27,6 +27,13 @@ android {
             "\"${localProps.getProperty("GEMINI_API_KEY", "")}\"")
         buildConfigField("String", "OPENROUTER_API_KEY",
             "\"${localProps.getProperty("OPENROUTER_API_KEY", "")}\"")
+
+        // The bundled leaf model uses only standard TFLite ops, so we ship
+        // native libs for real-device + emulator ABIs only. This keeps the
+        // APK from ballooning with x86/x86_64 binaries no phone needs.
+        ndk {
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a")
+        }
     }
 
     buildTypes {
@@ -72,7 +79,9 @@ dependencies {
     implementation("com.tbuonomo:dotsindicator:4.2")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    // TFLite — offline leaf classification model
+    // TFLite — offline leaf classification model.
+    // The model graph is plain Conv/Pool/Dense/Softmax (verified), so the
+    // standard runtime is enough — the heavyweight select-tf-ops package
+    // (~200 MB of Flex native libs) is not needed and was removed.
     implementation("org.tensorflow:tensorflow-lite:2.16.1")
-    implementation("org.tensorflow:tensorflow-lite-select-tf-ops:2.16.1")
 }

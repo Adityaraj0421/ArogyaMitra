@@ -103,6 +103,11 @@ import static android.content.ContentValues.TAG;
 
 public class HelloActivity extends AppCompatActivity {
 
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LanguageManager.wrap(newBase));
+    }
+
     private static final int SPLASH_DELAY = 5000; // 5 seconds
     private static final String PREFS_NAME = "MyPrefsFile";
     private static final String IS_LOGGED_IN_KEY = "isLoggedIn";

@@ -26,6 +26,11 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class UserInfoActivityDummy extends AppCompatActivity {
 
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LanguageManager.wrap(newBase));
+    }
+
     private Button buttonPersonalDetails;
     private Button buttonAddress;
     private Button buttonContactInfo;

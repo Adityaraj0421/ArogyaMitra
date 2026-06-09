@@ -39,7 +39,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Identify a Plant"
+                android:text="@string/identify_a_plant"
                 android:textColor="#1A3A1A"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -199,7 +199,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="AI Analysis Result"
+                            android:text="@string/ai_analysis_result"
                             android:textColor="#1A3A1A"
                             android:textSize="13sp"
                             android:textStyle="bold"

@@ -31,6 +31,11 @@ import java.util.Locale;
 
 public class DrugListActivity extends AppCompatActivity {
 
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LanguageManager.wrap(newBase));
+    }
+
     public static final String EXTRA_PLANT_QUERY = "PLANT_QUERY";
 
     private RecyclerView recyclerViewDrugs;

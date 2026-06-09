@@ -21,6 +21,11 @@ import static android.content.ContentValues.TAG;
 
 public class MedicineListActivity extends AppCompatActivity {
 
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LanguageManager.wrap(newBase));
+    }
+
     private RecyclerView recyclerViewDrugs;
     private MedicineAdapter drugAdapter;
     private List<Medicine> drugList = new ArrayList<>();

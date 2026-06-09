@@ -25,3 +25,7 @@ google-services.json
 # Build caches
 .gradle-home/
 .claude/
+
+# Firebase admin credentials — never commit
+firebase_seed/serviceAccountKey.json
+serviceAccountKey.json

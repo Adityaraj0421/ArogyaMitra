@@ -29,6 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeDummy extends AppCompatActivity {
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LanguageManager.wrap(newBase));
+    }
     private static final String TAG = "HomeDummy";
 
     private ViewPager viewPager;

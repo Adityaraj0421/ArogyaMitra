@@ -55,6 +55,11 @@ import java.util.Map;
 
 public class DrugDetails extends AppCompatActivity {
 
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LanguageManager.wrap(newBase));
+    }
+
     private String currentUser;
     private EditText mMessageEditText;
     private EditText mScientificNameEditText;
