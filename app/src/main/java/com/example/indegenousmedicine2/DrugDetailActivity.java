@@ -10,6 +10,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DrugDetailActivity extends AppCompatActivity {
+
+    /** Owner tag used by the seeded plant catalogue (firebase_seed/import_seed.js). */
+    private static final String SEED_CATALOGUE_OWNER = "Seed Catalogue";
 
     private RecyclerView drugRecyclerView;
     private DrugAdapterForPlantsDetails drugAdapter;
@@ -54,38 +59,43 @@ public class DrugDetailActivity extends AppCompatActivity {
     }
 
     private void fetchDrugDetails() {
-        // Reference to the "ListOfValues" node in the database
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("ListOfValues");
+        // The plant catalogue lives in "drug_to_be_validated" (the 229 seeded plants
+        // plus user submissions). The old code read "ListOfValues", a node that does
+        // not exist in this database, so the list was always empty.
+        DatabaseReference databaseReference =
+                FirebaseDatabase.getInstance().getReference().child("drug_to_be_validated");
 
-        // Add a ValueEventListener to listen for data changes
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String myName = user != null ? user.getDisplayName() : null;
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Clear the list before adding new data
                 drugList.clear();
-
-                // Iterate through each child node under "ListOfValues"
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // Convert each child into a DrugDetail object
-                    DrugDetail drugDetail = snapshot.getValue(DrugDetail.class);
+                    // Catalogue + my records (the seeds are owned by "Seed Catalogue").
+                    String owner = snapshot.child("Aarogya Mitra").getValue(String.class);
+                    boolean isCatalogue = SEED_CATALOGUE_OWNER.equals(owner);
+                    boolean isMine = myName != null && myName.equals(owner);
+                    if (!isCatalogue && !isMine) continue;
 
-                    // Add the object to the list if it is not null
-                    if (drugDetail != null) {
-                        drugList.add(drugDetail);
+                    // The stored field names differ from DrugDetail's @PropertyName
+                    // mapping, so map them explicitly here.
+                    String vernacular = snapshot.child("Drug Name").getValue(String.class);
+                    if (vernacular == null) {
+                        vernacular = snapshot.child("medicinalPlants").getValue(String.class);
                     }
+                    String scientific = snapshot.child("scientificName").getValue(String.class);
+                    String use = snapshot.child("howToApply").getValue(String.class);
+                    if (use == null) {
+                        use = snapshot.child("modeOfPreparation").getValue(String.class);
+                    }
+                    String photo = firstImageUrl(snapshot.child("imageUrls"));
+
+                    drugList.add(new DrugDetail(scientific, vernacular, photo, use));
                 }
-
-                // Notify the adapter about the updated data
                 drugAdapter.notifyDataSetChanged();
-
-                // Log the details of each drug
-//                for (DrugDetail drug : drugList) {
-//                    Log.d("DrugDetailActivity", "Drug Detail: " +
-//                            "Vernacular Name: " + drug.getVernacularName() +
-//                            ", Scientific Name: " + drug.getScientificName() +
-//                            ", Photograph: " + drug.getPhotograph() +
-//                            ", Medicinal Use: " + drug.getMedicinalUse());
-//                }
+                Log.d("DrugDetailActivity", "Loaded " + drugList.size() + " plants");
             }
 
             @Override
@@ -93,5 +103,17 @@ public class DrugDetailActivity extends AppCompatActivity {
                 Log.e("DrugDetailActivity", "Database error: " + databaseError.getMessage());
             }
         });
+    }
+
+    /** Returns the best image URL under imageUrls (prefers the wiki image). */
+    private String firstImageUrl(DataSnapshot imageUrls) {
+        if (imageUrls == null || !imageUrls.exists()) return null;
+        String wiki = imageUrls.child("wiki").getValue(String.class);
+        if (wiki != null && !wiki.isEmpty()) return wiki;
+        for (DataSnapshot child : imageUrls.getChildren()) {
+            String url = child.getValue(String.class);
+            if (url != null && !url.isEmpty()) return url;
+        }
+        return null;
     }
 }

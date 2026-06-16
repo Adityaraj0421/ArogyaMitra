@@ -38,6 +38,9 @@ public class DrugListActivity extends AppCompatActivity {
 
     public static final String EXTRA_PLANT_QUERY = "PLANT_QUERY";
 
+    /** Owner tag used by the seeded plant catalogue (firebase_seed/import_seed.js). */
+    private static final String SEED_CATALOGUE_OWNER = "Seed Catalogue";
+
     private RecyclerView recyclerViewDrugs;
     private android.widget.TextView textViewEmpty;
     private ArrayList<Medicine> medicines;
@@ -122,13 +125,20 @@ public class DrugListActivity extends AppCompatActivity {
         String userName = user.getDisplayName();
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("drug_to_be_validated");
-        drugsQuery = databaseReference.orderByChild("Aarogya Mitra").equalTo(userName);
+        // Show the seeded catalogue plus anything THIS user submitted. Firebase has
+        // no server-side OR, so read the node and filter on the owner tag client-side.
+        drugsQuery = databaseReference;
 
         drugsListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 medicines.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String owner = snapshot.child("Aarogya Mitra").getValue(String.class);
+                    boolean isCatalogue = SEED_CATALOGUE_OWNER.equals(owner);
+                    boolean isMine = userName != null && userName.equals(owner);
+                    if (!isCatalogue && !isMine) continue;
+
                     String key = snapshot.getKey();
                     String drugName = snapshot.child("Drug Name").getValue(String.class);
                     String scientificName = snapshot.child("scientificName").getValue(String.class);

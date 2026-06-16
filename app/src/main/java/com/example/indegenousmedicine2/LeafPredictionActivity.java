@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ public class LeafPredictionActivity extends AppCompatActivity {
         super.attachBaseContext(LanguageManager.wrap(newBase));
     }
 
+    private static final String TAG = "LeafPrediction";
     private static final String PREFS_NAME    = "leaf_prediction_prefs";
     private static final String PREF_USE_GEMINI = "use_gemini";
 
@@ -143,26 +145,21 @@ public class LeafPredictionActivity extends AppCompatActivity {
         if (identifier != null) identifier.close();
 
         if (gemini) {
-            // Prefer OpenRouter (multi-model, free tier); fall back to native Gemini
-            if (!BuildConfig.OPENROUTER_API_KEY.isEmpty()) {
-                identifier = new OpenRouterLeafIdentifier(BuildConfig.OPENROUTER_API_KEY);
-            } else {
-                identifier = new GeminiLeafIdentifier(BuildConfig.GEMINI_API_KEY);
-            }
+            identifier = newAiIdentifier();
             useGemini = true;
         } else {
             try {
                 identifier = new LeafClassifier(this);
                 useGemini  = false;
-            } catch (IOException e) {
-                // TFLite model asset missing — fall back gracefully
+            } catch (Throwable e) {
+                // Catch Throwable, not just IOException: on an x86/x86_64 target the
+                // TFLite native .so is absent (release abiFilters ship arm only), so
+                // the Interpreter constructor throws UnsatisfiedLinkError / RuntimeException.
+                // Degrade to AI instead of crashing the app.
+                Log.e(TAG, "Offline classifier unavailable, falling back to AI", e);
                 Toast.makeText(this, "Offline model unavailable, using AI",
                         Toast.LENGTH_SHORT).show();
-                if (!BuildConfig.OPENROUTER_API_KEY.isEmpty()) {
-                    identifier = new OpenRouterLeafIdentifier(BuildConfig.OPENROUTER_API_KEY);
-                } else {
-                    identifier = new GeminiLeafIdentifier(BuildConfig.GEMINI_API_KEY);
-                }
+                identifier = newAiIdentifier();
                 useGemini = true;
             }
         }
@@ -175,6 +172,17 @@ public class LeafPredictionActivity extends AppCompatActivity {
 
         updateToggleUI();
         resetResult();
+    }
+
+    /**
+     * Builds the AI identifier. Gemini is the preferred provider (gemini-2.5-flash);
+     * OpenRouter (free NVIDIA models) is the fallback if no Gemini key is configured.
+     */
+    private LeafIdentifier newAiIdentifier() {
+        if (!BuildConfig.GEMINI_API_KEY.isEmpty()) {
+            return new GeminiLeafIdentifier(BuildConfig.GEMINI_API_KEY);
+        }
+        return new OpenRouterLeafIdentifier(BuildConfig.OPENROUTER_API_KEY);
     }
 
     /** Updates the segmented toggle and the result-card badge to match useGemini. */
@@ -234,6 +242,9 @@ public class LeafPredictionActivity extends AppCompatActivity {
                     searchDrugButton.setVisibility(View.VISIBLE);
                 });
             } catch (Exception e) {
+                // Surface the real cause in logcat instead of only a generic toast —
+                // e.g. "OpenRouter error 429 ..." or a Gemini quota message.
+                Log.e(TAG, "Prediction failed (" + (useGemini ? "AI" : "offline") + ")", e);
                 runOnUiThread(this::showPredictionError);
             }
         });

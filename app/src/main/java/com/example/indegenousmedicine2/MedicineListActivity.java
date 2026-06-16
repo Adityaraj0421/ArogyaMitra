@@ -26,10 +26,14 @@ public class MedicineListActivity extends AppCompatActivity {
         super.attachBaseContext(LanguageManager.wrap(newBase));
     }
 
+    /** Owner tag used by the seeded plant catalogue (firebase_seed/import_seed.js). */
+    private static final String SEED_CATALOGUE_OWNER = "Seed Catalogue";
+
     private RecyclerView recyclerViewDrugs;
     private MedicineAdapter drugAdapter;
     private List<Medicine> drugList = new ArrayList<>();
     private DatabaseReference mMessageDatabaseReference;
+    private DatabaseReference drugsRef;
     private String currentUser;
     private ValueEventListener drugsListener;
 
@@ -69,6 +73,14 @@ public class MedicineListActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 drugList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    // Show the seeded catalogue plus anything THIS user submitted.
+                    // Firebase has no server-side OR, so we read the node once and
+                    // filter on "Aarogya Mitra" (the owner tag) here.
+                    String owner = snapshot.child("Aarogya Mitra").getValue(String.class);
+                    boolean isCatalogue = SEED_CATALOGUE_OWNER.equals(owner);
+                    boolean isMine = currentUser != null && currentUser.equals(owner);
+                    if (!isCatalogue && !isMine) continue;
+
                     String key = snapshot.getKey();
                     String name = snapshot.child("Drug Name").getValue(String.class);
                     String scientificName = snapshot.child("scientificName").getValue(String.class);
@@ -82,10 +94,8 @@ public class MedicineListActivity extends AppCompatActivity {
                 Toast.makeText(MedicineListActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
-        mMessageDatabaseReference.child("drug_to_be_validated")
-                .orderByChild("Aarogya Mitra")
-                .equalTo(currentUser)
-                .addValueEventListener(drugsListener);
+        drugsRef = mMessageDatabaseReference.child("drug_to_be_validated");
+        drugsRef.addValueEventListener(drugsListener);
     }
 
     @Override
@@ -100,11 +110,8 @@ public class MedicineListActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (drugsListener != null) {
-            mMessageDatabaseReference.child("drug_to_be_validated")
-                    .orderByChild("Aarogya Mitra")
-                    .equalTo(currentUser)
-                    .removeEventListener(drugsListener);
+        if (drugsListener != null && drugsRef != null) {
+            drugsRef.removeEventListener(drugsListener);
         }
     }
 

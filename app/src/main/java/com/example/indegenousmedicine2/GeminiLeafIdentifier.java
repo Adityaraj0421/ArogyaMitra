@@ -20,8 +20,11 @@ import okhttp3.Response;
 
 public class GeminiLeafIdentifier implements LeafIdentifier {
 
+    // gemini-2.0-flash was retired ("no longer available", HTTP 404). gemini-2.5-flash
+    // is the current stable multimodal model and is verified working with our key + the
+    // inline_data request shape below.
     private static final String ENDPOINT =
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
     // ─────────────────────────────────────────────────────────────────────────
     // YOUR TURN: Write the prompt that Gemini will receive along with the image.
